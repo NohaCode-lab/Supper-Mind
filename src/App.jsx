@@ -1,17 +1,26 @@
+import { Outlet } from "react-router-dom"
+import Navbar from "./components/layout/Navbar"
+import Sidebar from "./components/layout/Sidebar"
+
 function App() {
   return (
-    <main className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-6xl font-bold mb-4">
-          Supper Mind
-        </h1>
+    <div className="min-h-screen flex bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white">
+      {/* Sidebar */}
+      <Sidebar />
 
-        <p className="text-xl text-gray-300 max-w-xl">
-          Your calm digital companion for stress relief,
-          emotional balance, and mental wellness.
-        </p>
+      <div className="flex-1 flex flex-col">
+
+        {/* Navbar */}
+        <Navbar />
+
+        {/* 👇 هنا الصفحات تتغير */}
+        <main className="flex-1 p-6">
+          <Outlet />
+        </main>
+
       </div>
-    </main>
+
+    </div>
   )
 }
 
