@@ -1,0 +1,14 @@
+
+import { Navigate } from "react-router-dom";
+
+function ProtectedRoute({ children }) {
+  const isAuthenticated = false; // لاحقًا نربطه بـ auth system
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+export default ProtectedRoute;

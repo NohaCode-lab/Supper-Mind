@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Sidebar() {
+  const { t } = useTranslation();
+
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
       isActive
@@ -16,8 +19,9 @@ function Sidebar() {
         <h1 className="text-xl font-bold text-white">
           🧠 Supper Mind
         </h1>
+
         <p className="text-xs text-gray-400 mt-1">
-          AI Mental Support SaaS
+          {t("ai")} Mental Support SaaS
         </p>
       </div>
 
@@ -25,31 +29,30 @@ function Sidebar() {
       <nav className="flex flex-col gap-2 text-sm">
 
         <NavLink to="/" className={linkClass}>
-          🏠 Home
+          🏠 {t("dashboard")}
         </NavLink>
 
         <NavLink to="/dashboard" className={linkClass}>
-          📊 Dashboard
+          📊 {t("dashboard")}
         </NavLink>
 
         <NavLink to="/journal" className={linkClass}>
-          📓 Journal
+          📓 {t("journal")}
         </NavLink>
 
         <NavLink to="/mood" className={linkClass}>
-          😊 Mood Tracker
+          😊 {t("mood")}
         </NavLink>
 
-        {/* Future AI Feature */}
         <NavLink to="/chat" className={linkClass}>
-          🤖 AI Companion
+          🤖 {t("ai")}
         </NavLink>
 
       </nav>
 
       {/* Bottom Section */}
       <div className="mt-auto pt-6 border-t border-white/10 text-xs text-gray-500">
-        Stay mindful ✨
+        {t("welcome")}
       </div>
 
     </aside>
