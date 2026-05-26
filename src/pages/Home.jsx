@@ -1,100 +1,108 @@
+import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-import { motion } from "framer-motion"
+export default function Home() {
+  const { t } = useTranslation();
 
-function Home() {
   return (
-    <div className="space-y-24">
+    <div className="space-y-24 pb-12 animate-in fade-in duration-700">
 
       {/* HERO SECTION */}
       <section className="text-center pt-20 px-6">
-
         <motion.h1
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
-  className="text-5xl md:text-6xl font-bold mb-6"
->
-          Your Calm Digital Companion <br />
-          for Mental Wellness
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-5xl md:text-6xl font-bold mb-6 text-slate-800 dark:text-slate-100"
+        >
+          {t('home.hero_title', 'Your Calm Digital Companion')} <br />
+          <span className="bg-linear-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">
+             {t('home.hero_subtitle', 'for Mental Wellness')}
+          </span>
         </motion.h1>
 
         <motion.p
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6, delay: 0.2 }}
-  className="text-gray-300 text-lg max-w-2xl mx-auto mb-10"
->
-          Supper Mind helps you reduce stress, track your mood, and find emotional balance
-          with AI-powered mental support.
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto mb-10"
+        >
+          {t('home.hero_desc', 'Supper Mind helps you reduce stress, track your mood, and find emotional balance with AI-powered mental support.')}
         </motion.p>
 
         <div className="flex justify-center gap-4 flex-wrap">
+          <Link 
+            to="/chat"
+            className="bg-teal-600 hover:bg-teal-700 px-6 py-3 rounded-xl text-white font-medium transition-all shadow-md hover:shadow-lg"
+          >
+            {t('home.btn_start', 'Get Started')}
+          </Link>
 
-          <button className="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-xl text-white font-medium transition">
-            Get Started
-          </button>
-
-          <button className="border border-gray-600 px-6 py-3 rounded-xl text-gray-300 hover:text-white transition">
-            Learn More
-          </button>
-
+          <Link 
+            to="/dashboard"
+            className="border border-slate-300 dark:border-slate-700 px-6 py-3 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+          >
+            {t('home.btn_learn', 'Learn More')}
+          </Link>
         </div>
-
       </section>
 
       {/* FEATURES SECTION */}
       <section className="px-6">
-
-        <h2 className="text-center text-3xl font-bold mb-12">
-          Why Supper Mind?
+        <h2 className="text-center text-3xl font-bold mb-12 text-slate-800 dark:text-slate-100">
+          {t('home.features_title', 'Why Supper Mind?')}
         </h2>
 
         <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-
-          <div className="bg-[#1e293b] p-6 rounded-2xl hover:scale-105 transition">
-            <h3 className="text-xl font-semibold mb-2">AI Support</h3>
-            <p className="text-gray-400">
-              Talk with an AI companion that understands your emotions.
+          {/* Feature 1 */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:scale-105 transition-transform duration-300 shadow-sm">
+            <h3 className="text-xl font-semibold mb-2 text-slate-800 dark:text-slate-100">
+              {t('home.feature_1_title', 'AI Support')}
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              {t('home.feature_1_desc', 'Talk with an AI companion that understands your emotions.')}
             </p>
           </div>
 
-          <div className="bg-[#1e293b] p-6 rounded-2xl hover:scale-105 transition">
-            <h3 className="text-xl font-semibold mb-2">Stress Relief</h3>
-            <p className="text-gray-400">
-              Guided exercises to calm your mind instantly.
+          {/* Feature 2 */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:scale-105 transition-transform duration-300 shadow-sm">
+            <h3 className="text-xl font-semibold mb-2 text-slate-800 dark:text-slate-100">
+              {t('home.feature_2_title', 'Stress Relief')}
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              {t('home.feature_2_desc', 'Guided exercises to calm your mind instantly.')}
             </p>
           </div>
 
-          <div className="bg-[#1e293b] p-6 rounded-2xl hover:scale-105 transition">
-            <h3 className="text-xl font-semibold mb-2">Mood Tracking</h3>
-            <p className="text-gray-400">
-              Understand your emotional patterns over time.
+          {/* Feature 3 */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:scale-105 transition-transform duration-300 shadow-sm">
+            <h3 className="text-xl font-semibold mb-2 text-slate-800 dark:text-slate-100">
+              {t('home.feature_3_title', 'Mood Tracking')}
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              {t('home.feature_3_desc', 'Understand your emotional patterns over time.')}
             </p>
           </div>
-
         </div>
-
       </section>
 
       {/* CTA SECTION */}
-      <section className="text-center bg-[#0b1220] py-20 px-6 rounded-3xl mx-6">
-
-        <h2 className="text-3xl font-bold mb-4">
-          Start your mental wellness journey today
+      <section className="text-center bg-teal-50 dark:bg-slate-900 border border-teal-100 dark:border-slate-800 py-20 px-6 rounded-3xl mx-6 shadow-sm">
+        <h2 className="text-3xl font-bold mb-4 text-slate-800 dark:text-slate-100">
+          {t('home.cta_title', 'Start your mental wellness journey today')}
         </h2>
-
-        <p className="text-gray-400 mb-8">
-          Join thousands improving their mental health with Supper Mind.
+        <p className="text-slate-600 dark:text-slate-400 mb-8">
+          {t('home.cta_desc', 'Join thousands improving their mental health with Supper Mind.')}
         </p>
-
-        <button className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-xl font-medium transition">
-          Get Started Free
-        </button>
-
+        <Link 
+          to="/register"
+          className="bg-teal-600 hover:bg-teal-700 px-8 py-3 rounded-xl text-white font-medium transition-all shadow-md inline-block"
+        >
+          {t('home.btn_register', 'Get Started Free')}
+        </Link>
       </section>
 
     </div>
-  )
+  );
 }
-
-export default Home

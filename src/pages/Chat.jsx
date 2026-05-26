@@ -1,113 +1,192 @@
+import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FiSend, FiUser, FiHeart } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import OpenAI from 'openai';
 
-import { useState } from "react"
-import OpenAI from "openai"
-
+// Initialize OpenAI completely decoupled from the component lifecycle
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true
-})
+  dangerouslyAllowBrowser: true // Note: For a final production release, API calls should move to a backend
+});
 
-function Chat() {
+export default function Chat() {
+  const { t } = useTranslation();
+  const messagesEndRef = useRef(null);
+
+  // Direct state variables for managing the inputs and UI status
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Storing messages in the exact format OpenAI expects
   const [messages, setMessages] = useState([
     {
-      role: "assistant",
-      content: "Hi 👋 I'm Supper Mind. How are you feeling today?"
+      role: 'assistant',
+      content: t('chat.welcome', 'Hi 👋 I am Supper Mind. How are you feeling today? Take your time.'),
     }
-  ])
+  ]);
 
-  const [input, setInput] = useState("")
-  const [loading, setLoading] = useState(false)
+  // Smooth auto-scroll to the bottom when a new message appears
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return
+  // Direct function to handle the OpenAI API call
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    
+    if (!inputValue.trim()) return;
 
+    // 1. Prepare the user's message
     const userMessage = {
-      role: "user",
-      content: input
-    }
-
-    const updatedMessages = [...messages, userMessage]
-    setMessages(updatedMessages)
-    setInput("")
-    setLoading(true)
+      role: 'user',
+      content: inputValue,
+    };
+    
+    // 2. Update UI instantly
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    setInputValue('');
+    setIsLoading(true);
 
     try {
-      const res = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+      // 3. Call the OpenAI API
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4o-mini', // Fast and cost-effective for conversational AI
         messages: [
           {
-            role: "system",
-            content:
-              "You are a mental health supportive AI. Be calm, empathetic, and helpful. Keep responses short and soothing."
+            role: 'system',
+            content: 'You are Supper Mind, a mental health supportive AI. Be calm, empathetic, and helpful. Keep responses short, soothing, and use simple language.'
           },
           ...updatedMessages
         ]
-      })
+      });
 
+      // 4. Extract and save the AI's response
       const aiMessage = {
-        role: "assistant",
-        content: res.choices[0].message.content
-      }
+        role: 'assistant',
+        content: response.choices[0].message.content
+      };
 
-      setMessages([...updatedMessages, aiMessage])
+      setMessages([...updatedMessages, aiMessage]);
     } catch (error) {
-      console.error(error)
+      console.error('OpenAI API Error:', error);
+      // Fallback message in case the API fails
+      setMessages([...updatedMessages, { 
+        role: 'assistant', 
+        content: t('chat.error', 'I am having a little trouble connecting right now, but I am still here. Let us try again in a moment.') 
+      }]);
+    } finally {
+      setIsLoading(false);
     }
-
-    setLoading(false)
-  }
+  };
 
   return (
-    <div className="h-screen flex flex-col bg-[#0f172a] text-white">
-
-      {/* Header */}
-      <div className="p-4 border-b border-gray-800 text-center font-bold">
-        Supper Mind AI
+    <div className="flex flex-col h-[calc(100vh-8rem)] max-w-4xl mx-auto w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm animate-in fade-in duration-500">
+      
+      {/* Chat Header */}
+      <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-md flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400">
+          <FiHeart size={20} />
+        </div>
+        <div>
+          <h2 className="text-lg font-medium text-slate-800 dark:text-slate-100">
+            {t('chat.title', 'Supper Mind Companion')}
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {t('chat.status', 'Always here for you')}
+          </p>
+        </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-4">
-
+      {/* Chat Messages Area */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {messages.map((msg, i) => (
-          <div
+          <motion.div 
             key={i}
-            className={`max-w-md p-3 rounded-xl ${
-              msg.role === "user"
-                ? "ml-auto bg-blue-600"
-                : "mr-auto bg-gray-800"
-            }`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
-            {msg.content}
-          </div>
+            <div className={`flex gap-3 max-w-[80%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+              
+              {/* Avatar */}
+              <div className="shrink-0 mt-1">
+                {msg.role === 'user' ? (
+                  <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+                    <FiUser size={16} />
+                  </div>
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800">
+                    <FiHeart size={16} />
+                  </div>
+                )}
+              </div>
+
+              {/* Message Bubble */}
+              <div 
+                className={`px-5 py-3.5 rounded-2xl text-base ${
+                  msg.role === 'user' 
+                    ? 'bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 rounded-tr-sm' 
+                    : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100 rounded-tl-sm'
+                }`}
+              >
+                {msg.content}
+              </div>
+
+            </div>
+          </motion.div>
         ))}
 
-        {loading && (
-          <div className="text-gray-400">Thinking...</div>
+        {/* Loading / Thinking Indicator */}
+        {isLoading && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-start"
+          >
+            <div className="flex gap-3 max-w-[80%] flex-row">
+              <div className="shrink-0 mt-1">
+                <div className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800">
+                  <FiHeart size={16} />
+                </div>
+              </div>
+              <div className="px-5 py-4 rounded-2xl bg-slate-100 dark:bg-slate-800 rounded-tl-sm flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </div>
+          </motion.div>
         )}
-
+        
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className="p-4 border-t border-gray-800 flex gap-2">
-
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Write how you feel..."
-          className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 outline-none"
-        />
-
-        <button
-          onClick={sendMessage}
-          className="bg-blue-500 px-5 rounded-xl hover:bg-blue-600 transition"
+      {/* Input Area */}
+      <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <form 
+          onSubmit={handleSendMessage}
+          className="flex items-center gap-3 relative max-w-3xl mx-auto"
         >
-          Send
-        </button>
-
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder={t('chat.input_placeholder', 'Share what is on your mind...')}
+            className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-full px-6 py-3.5 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all placeholder:text-slate-400"
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            disabled={!inputValue.trim() || isLoading}
+            className="absolute right-2 p-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded-full transition-colors flex items-center justify-center shadow-sm"
+          >
+            <FiSend size={18} className="mr-0.5 mt-0.5" />
+          </button>
+        </form>
       </div>
 
     </div>
-  )
+  );
 }
-
-export default Chat

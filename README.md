@@ -1,16 +1,75 @@
-# React + Vite
+# 🚀 CareerCraft (AI-Powered Career Assistant)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered SaaS platform that helps users build professional CVs, generate cover letters, match jobs, and interact with an intelligent AI assistant.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+# 🌍 English Version
 
-## React Compiler
+## ✨ Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+CareerCraft is a modern AI-driven career platform built with React.  
+It helps users improve their job applications using AI tools such as:
 
-## Expanding the ESLint configuration
+- CV Builder (ATS-friendly templates)
+- AI Chat Assistant
+- Job Matching System
+- Cover Letter Generator (coming soon)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Tech Stack
+
+- React (Vite)
+- JavaScript (ES6+)
+- Context API
+- Tailwind CSS (or CSS Modules)
+- LocalStorage (temporary auth system)
+- AI Service Layer (mock / extensible)
+
+---
+
+## 📁 Project Structure
+src/
+├── assets/          # Images / Icons / Fonts
+├── components/      # UI components
+│   ├── ui/          # Buttons, Inputs, Cards
+│   ├── layout/      # Navbar, Sidebar, Footer
+│   └── common/      # Loader, Modal
+├── pages/           # Application pages
+├── context/         # Global state (AuthContext)
+├── services/        # API / AI logic
+├── hooks/           # Custom hooks
+├── utils/           # Helper functions
+├── routes/          # Routing system
+├── styles/          # Global styles
+├── App.jsx
+└── main.jsx
+
+---
+
+## ⚙️ Features
+
+### 🔐 Authentication
+- Simple login/logout system
+- Persistent user state (localStorage)
+
+### 🤖 AI Chat
+- Interactive AI assistant
+- Ready for OpenAI / Claude integration
+
+### 📄 CV Builder
+- ATS-friendly CV templates
+- Editable sections
+
+### 💼 Job Tools (Planned)
+- AI job matching
+- Cover letter generator
+
+---
+
+## 🚀 Getting Started
+
+```bash
+npm install
+npm run dev

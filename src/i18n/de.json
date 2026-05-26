@@ -1,9 +1,23 @@
 {
-  "welcome": "Willkommen bei Supper Mind",
-  "dashboard": "Dashboard",
-  "journal": "Tagebuch",
-  "mood": "Stimmungsverfolgung",
-  "ai": "KI-Assistent",
-  "login": "Anmelden",
-  "register": "Loslegen"
+  "nav": {
+    "home": "Startseite",
+    "dashboard": "Wohlfühl-Dashboard",
+    "chat": "KI-Unterstützung"
+  },
+  "sidebar": {
+    "breathe_prompt": "Brauchst du einen Moment?",
+    "breathe_btn": "Atme tief durch"
+  },
+  "navbar": {
+    "openMenu": "Menü öffnen",
+    "switchLanguage": "Sprache wechseln",
+    "toggleTheme": "Design umschalten",
+    "profile": "Benutzerprofil"
+  },
+  "home": {
+    "title": "Finde dein emotionales Gleichgewicht",
+    "subtitle": "Ein KI-gestützter Rückzugsort für deinen Geist. Entspanne dich, reflektiere und finde Ruhe in deinem stressigen Alltag.",
+    "start_chat": "Gespräch beginnen",
+    "create_account": "Kostenloses Konto erstellen"
+  }
 }

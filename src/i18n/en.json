@@ -1,10 +1,23 @@
-
 {
-  "welcome": "Welcome to Supper Mind",
-  "dashboard": "Dashboard",
-  "journal": "Journal",
-  "mood": "Mood Tracker",
-  "ai": "AI Companion",
-  "login": "Login",
-  "register": "Get Started"
+  "nav": {
+    "home": "Home",
+    "dashboard": "Wellness Dashboard",
+    "chat": "AI Support"
+  },
+  "sidebar": {
+    "breathe_prompt": "Need a moment?",
+    "breathe_btn": "Take a Breath"
+  },
+  "navbar": {
+    "openMenu": "Open Menu",
+    "switchLanguage": "Switch Language",
+    "toggleTheme": "Toggle Theme",
+    "profile": "User Profile"
+  },
+  "home": {
+    "title": "Find Your Emotional Balance",
+    "subtitle": "An AI-powered sanctuary for your mind. Unwind, reflect, and find peace in your busy day.",
+    "start_chat": "Start a Conversation",
+    "create_account": "Create Free Account"
+  }
 }

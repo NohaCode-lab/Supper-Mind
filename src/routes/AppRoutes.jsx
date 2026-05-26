@@ -1,31 +1,33 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom';
+import App from '../App';
 
-import Home from "../pages/Home";
-import Dashboard from "../pages/Dashboard";
-import Chat from "../pages/Chat";
-import NotFound from "../pages/NotFound";
+// Pages
+import Home from '../pages/Home';
+import Dashboard from '../pages/Dashboard';
+import Chat from '../pages/Chat';
+import Register from '../pages/Register';
+import NotFound from '../pages/NotFound';
 
-import MainLayout from "../components/layouts/MainLayout";
-
-function AppRoutes() {
+export default function AppRoutes() {
   return (
     <Routes>
-
-      {/* Layout wrapper */}
-      <Route element={<MainLayout />}>
+      {/* Parent Route handling the global UI layout */}
+      <Route path="/" element={<App />}>
         
-        {/* Public pages */}
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/chat" element={<Chat />} />
-
+        {/* Public/Landing Route */}
+        <Route index element={<Home />} />
+        
+        {/* Core SaaS Application Routes */}
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="chat" element={<Chat />} />
+        
+        {/* Authentication Routes */}
+        <Route path="register" element={<Register />} />
+        
+        {/* 404 Catch-All */}
+        <Route path="*" element={<NotFound />} />
+        
       </Route>
-
-      {/* 404 Page */}
-      <Route path="*" element={<NotFound />} />
-
     </Routes>
   );
 }
-
-export default AppRoutes;
