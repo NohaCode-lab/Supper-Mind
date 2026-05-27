@@ -1,23 +1,43 @@
 {
   "nav": {
     "home": "Startseite",
-    "dashboard": "Wohlfühl-Dashboard",
-    "chat": "KI-Unterstützung"
+    "dashboard": "Wellness-Dashboard",
+    "chat": "KI-Unterstützung",
+    "greeting": "Willkommen zurück",
+    "guest": "Gast",
+    "toggle_language": "Sprache wechseln",
+    "toggle_theme": "Theme umschalten",
+    "logout": "Abmelden"
   },
   "sidebar": {
     "breathe_prompt": "Brauchst du einen Moment?",
-    "breathe_btn": "Atme tief durch"
+    "breathe_btn": "Atme durch"
   },
-  "navbar": {
-    "openMenu": "Menü öffnen",
-    "switchLanguage": "Sprache wechseln",
-    "toggleTheme": "Design umschalten",
-    "profile": "Benutzerprofil"
+  "register": {
+    "title": "Konto erstellen",
+    "subtitle": "Beginne deine Reise zu besserem mentalen Wohlbefinden.",
+    "name_label": "Vollständiger Name",
+    "name_placeholder": "Max Mustermann",
+    "email_label": "E-Mail Adresse",
+    "password_label": "Passwort",
+    "btn_submit": "Konto erstellen",
+    "creating": "Konto wird erstellt...",
+    "back_home": "← Zurück zur Startseite",
+    "success": "Konto erstellt! Willkommen bei Supper Mind.",
+    "error_fallback": "Konto konnte nicht erstellt werden."
   },
-  "home": {
-    "title": "Finde dein emotionales Gleichgewicht",
-    "subtitle": "Ein KI-gestützter Rückzugsort für deinen Geist. Entspanne dich, reflektiere und finde Ruhe in deinem stressigen Alltag.",
-    "start_chat": "Gespräch beginnen",
-    "create_account": "Kostenloses Konto erstellen"
+  "dashboard": {
+    "greeting": "Hallo",
+    "guest": "Freund",
+    "subtitle": "Hier ist eine Zusammenfassung deiner mentalen Wellness-Reise.",
+    "streak": "Aktueller Streak",
+    "days": "Tage",
+    "sessions": "KI-Sitzungen",
+    "log_title": "Wie fühlst du dich?",
+    "note_placeholder": "Kurze Notiz hinzufügen...",
+    "save_entry": "Eintrag speichern",
+    "saving": "Speichern...",
+    "history_title": "Letzter Verlauf",
+    "empty_state": "Noch keine Einträge. Protokolliere dein Befinden, um deinen Verlauf zu sehen."
   }
 }

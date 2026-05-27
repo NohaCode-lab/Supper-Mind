@@ -2,23 +2,22 @@ import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiSend, FiUser, FiHeart } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import OpenAI from 'openai';
 
-// Initialize OpenAI completely decoupled from the component lifecycle
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true // Note: For a final production release, API calls should move to a backend
-});
+// 1. Import your decoupled services and global state
+import { generateAIResponse } from '../services/openai';
+import { useAppStore } from '../context/useAppStore';
+import { handleAppError } from '../utils/helper';
 
 export default function Chat() {
   const { t } = useTranslation();
   const messagesEndRef = useRef(null);
+  
+  // 2. Pull in global state to track user activity
+  const incrementSessions = useAppStore((state) => state.incrementSessions);
 
-  // Direct state variables for managing the inputs and UI status
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  // Storing messages in the exact format OpenAI expects
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -26,52 +25,37 @@ export default function Chat() {
     }
   ]);
 
-  // Smooth auto-scroll to the bottom when a new message appears
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Direct function to handle the OpenAI API call
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isLoading) return;
 
-    // 1. Prepare the user's message
-    const userMessage = {
-      role: 'user',
-      content: inputValue,
-    };
-    
-    // 2. Update UI instantly
+    const userMessage = { role: 'user', content: inputValue };
     const updatedMessages = [...messages, userMessage];
+    
     setMessages(updatedMessages);
     setInputValue('');
     setIsLoading(true);
 
     try {
-      // 3. Call the OpenAI API
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini', // Fast and cost-effective for conversational AI
-        messages: [
-          {
-            role: 'system',
-            content: 'You are Supper Mind, a mental health supportive AI. Be calm, empathetic, and helpful. Keep responses short, soothing, and use simple language.'
-          },
-          ...updatedMessages
-        ]
-      });
+      // 3. Clean business logic: Send the history to the service layer
+      const aiResponseText = await generateAIResponse(updatedMessages);
 
-      // 4. Extract and save the AI's response
-      const aiMessage = {
-        role: 'assistant',
-        content: response.choices[0].message.content
-      };
+      setMessages([...updatedMessages, { 
+        role: 'assistant', 
+        content: aiResponseText 
+      }]);
 
-      setMessages([...updatedMessages, aiMessage]);
+      // 4. Update the global dashboard stats seamlessly
+      incrementSessions();
+
     } catch (error) {
-      console.error('OpenAI API Error:', error);
-      // Fallback message in case the API fails
+      // 5. Use your unified error handler
+      handleAppError(error, t('chat.error_fallback', 'I am having trouble connecting right now.'));
+      
       setMessages([...updatedMessages, { 
         role: 'assistant', 
         content: t('chat.error', 'I am having a little trouble connecting right now, but I am still here. Let us try again in a moment.') 
@@ -110,7 +94,6 @@ export default function Chat() {
           >
             <div className={`flex gap-3 max-w-[80%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
               
-              {/* Avatar */}
               <div className="shrink-0 mt-1">
                 {msg.role === 'user' ? (
                   <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
@@ -123,7 +106,6 @@ export default function Chat() {
                 )}
               </div>
 
-              {/* Message Bubble */}
               <div 
                 className={`px-5 py-3.5 rounded-2xl text-base ${
                   msg.role === 'user' 
@@ -138,7 +120,6 @@ export default function Chat() {
           </motion.div>
         ))}
 
-        {/* Loading / Thinking Indicator */}
         {isLoading && (
           <motion.div 
             initial={{ opacity: 0 }}

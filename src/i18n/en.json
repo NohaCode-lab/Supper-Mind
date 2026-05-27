@@ -2,22 +2,42 @@
   "nav": {
     "home": "Home",
     "dashboard": "Wellness Dashboard",
-    "chat": "AI Support"
+    "chat": "AI Support",
+    "greeting": "Welcome back",
+    "guest": "Guest",
+    "toggle_language": "Switch Language",
+    "toggle_theme": "Toggle Theme",
+    "logout": "Sign out"
   },
   "sidebar": {
     "breathe_prompt": "Need a moment?",
     "breathe_btn": "Take a Breath"
   },
-  "navbar": {
-    "openMenu": "Open Menu",
-    "switchLanguage": "Switch Language",
-    "toggleTheme": "Toggle Theme",
-    "profile": "User Profile"
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Start your journey to better mental wellness.",
+    "name_label": "Full Name",
+    "name_placeholder": "John Doe",
+    "email_label": "Email Address",
+    "password_label": "Password",
+    "btn_submit": "Create Account",
+    "creating": "Creating account...",
+    "back_home": "← Back to Home",
+    "success": "Account created! Welcome to Supper Mind.",
+    "error_fallback": "Could not create account."
   },
-  "home": {
-    "title": "Find Your Emotional Balance",
-    "subtitle": "An AI-powered sanctuary for your mind. Unwind, reflect, and find peace in your busy day.",
-    "start_chat": "Start a Conversation",
-    "create_account": "Create Free Account"
+  "dashboard": {
+    "greeting": "Hello",
+    "guest": "Friend",
+    "subtitle": "Here is a summary of your mental wellness journey.",
+    "streak": "Current Streak",
+    "days": "Days",
+    "sessions": "AI Sessions",
+    "log_title": "How are you feeling?",
+    "note_placeholder": "Add a brief note...",
+    "save_entry": "Save Entry",
+    "saving": "Saving...",
+    "history_title": "Recent History",
+    "empty_state": "No entries yet. Log how you are feeling to see your history."
   }
 }
