@@ -1,70 +1,72 @@
-# 🚀 CareerCraft (AI-Powered Career Assistant)
+# 🧘 Supper Mind (AI-Powered Wellness & Productivity)
 
-An AI-powered SaaS platform that helps users build professional CVs, generate cover letters, match jobs, and interact with an intelligent AI assistant.
+An AI-powered SaaS wellness and productivity platform designed to help users track mental wellness, build healthy daily habits, monitor streaks, and use AI chat for emotional support and guidance.
 
 ---
 
-# 🌍 English Version
-
 ## ✨ Overview
 
-CareerCraft is a modern AI-driven career platform built with React.  
-It helps users improve their job applications using AI tools such as:
+Supper Mind is a modern, calm digital space built with React.  
+It focuses on calm UX, productivity, and mental clarity, using features such as:
 
-- CV Builder (ATS-friendly templates)
-- AI Chat Assistant
-- Job Matching System
-- Cover Letter Generator (coming soon)
+- Mental Wellness & Mood Tracking
+- Healthy Habit Building & Streak Monitoring
+- Empathetic AI Chat Assistant (Emotional Support)
+- Personalized Dashboards and Insights
 
 ---
 
 ## 🛠️ Tech Stack
 
-- React (Vite)
-- JavaScript (ES6+)
-- Context API
-- Tailwind CSS (or CSS Modules)
-- LocalStorage (temporary auth system)
-- AI Service Layer (mock / extensible)
+- React 19 + Vite (JavaScript only)
+- Tailwind CSS v4
+- Zustand (State Management)
+- React Router
+- TanStack Query
+- AI Integration (Gemini / OpenAI / Claude)
+- Local storage + optional backend integration
 
 ---
 
 ## 📁 Project Structure
+
+```text
 src/
-├── assets/          # Images / Icons / Fonts
-├── components/      # UI components
-│   ├── ui/          # Buttons, Inputs, Cards
-│   ├── layout/      # Navbar, Sidebar, Footer
-│   └── common/      # Loader, Modal
-├── pages/           # Application pages
-├── context/         # Global state (AuthContext)
-├── services/        # API / AI logic
-├── hooks/           # Custom hooks
+├── assets/          # Images, Icons, and global assets
+├── components/      # Reusable UI components
+├── features/        # Feature-slice architecture
+│   ├── habits/      # Example domain/feature
+│   │   ├── api/     # Feature-specific API calls
+│   │   ├── components/  # Feature-specific UI components
+│   │   └── stores/  # Feature-specific local state
+│   └── journal/     # Example domain/feature
+├── pages/           # Route-level components
+├── stores/          # Zustand state modules
+├── services/        # AI and Backend service abstraction layers
 ├── utils/           # Helper functions
-├── routes/          # Routing system
-├── styles/          # Global styles
-├── App.jsx
-└── main.jsx
+├── App.jsx          # Root component
+└── main.jsx         # Entry point
+```
 
 ---
 
 ## ⚙️ Features
 
-### 🔐 Authentication
-- Simple login/logout system
-- Persistent user state (localStorage)
+### 🧘 Wellness Tracking
 
-### 🤖 AI Chat
-- Interactive AI assistant
-- Ready for OpenAI / Claude integration
+- Track mood and emotional trends over time (AI Mood analysis)
+- Minimal, calm, and uncluttered UI
 
-### 📄 CV Builder
-- ATS-friendly CV templates
-- Editable sections
+### 🤖 AI Empathy Chat
 
-### 💼 Job Tools (Planned)
-- AI job matching
-- Cover letter generator
+- Supportive AI assistant for mental clarity
+- Powered by Gemini / OpenAI / Claude
+
+### 🌱 Productivity & Habits
+
+- Daily habit tracker
+- Streak monitoring for consistency
+- Productivity insights and AI summaries
 
 ---
 
@@ -73,3 +75,4 @@ src/
 ```bash
 npm install
 npm run dev
+```

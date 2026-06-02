@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 // 1. Import your decoupled services and global state
 import { generateAIResponse } from '../services/openai';
-import { useAppStore } from '../context/useAppStore';
+import { useAppStore } from '../stores/useAppStore';
 import { handleAppError } from '../utils/helper';
 
 export default function Chat() {

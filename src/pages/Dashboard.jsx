@@ -4,15 +4,21 @@ import { FiTrendingUp, FiClock, FiActivity, FiSmile, FiMeh, FiFrown } from 'reac
 
 // Hooks & State
 import { useAuth } from '../hooks/useAuth';
-import { useAppStore } from '../context/useAppStore';
+import { useAppStore } from '../stores/useAppStore';
 import { useMood } from '../hooks/useMood';
 import { formatRelativeTime } from '../utils/helper';
+import HabitTracker from '../features/habits/components/HabitTracker';
+import { useHabitStore } from '../features/habits/stores/useHabitStore';
 
 export default function Dashboard() {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
-  const { dailyStreak, sessionsCompleted } = useAppStore();
+  const { sessionsCompleted } = useAppStore();
+  const { habits } = useHabitStore();
   const { moodHistory, isFetchingMoods, logMood, isLoggingMood } = useMood();
+
+  // Calculate the total streak across all active habits
+  const totalStreak = habits.reduce((sum, habit) => sum + habit.streak, 0);
 
   // Local state for the mood input form
   const [selectedMood, setSelectedMood] = useState(null);
@@ -61,7 +67,7 @@ export default function Dashboard() {
               {t('dashboard.streak', 'Current Streak')}
             </p>
             <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              {dailyStreak} {t('dashboard.days', 'Days')}
+              {totalStreak} {t('dashboard.days', 'Days')}
             </p>
           </div>
         </div>
@@ -84,9 +90,8 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* 3. Quick Action: Log Mood */}
-        <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm sticky top-24">
+        <div className="lg:col-span-1 space-y-6">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">
               {t('dashboard.log_title', 'How are you feeling?')}
             </h2>
@@ -135,6 +140,9 @@ export default function Dashboard() {
               </button>
             </form>
           </div>
+          
+          {/* Habit Tracker Component */}
+          <HabitTracker />
         </div>
 
         {/* 4. Data View: History List (TanStack Query Server State) */}

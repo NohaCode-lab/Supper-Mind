@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { handleAppError } from '../utils/helper';
-import { ROUTES } from '../utils/constand';
+import { ROUTES } from '../utils/constants';
 
 export function useAuth() {
   const [isAuthLoading, setIsAuthLoading] = useState(true);
