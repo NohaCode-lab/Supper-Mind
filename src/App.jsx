@@ -1,22 +1,47 @@
-import Navbar from './components/layout/Navbar';
-import Sidebar from './components/layout/Sidebar';
-import AppRoutes from './routes/AppRoutes';
+import { Suspense, useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Navbar from "./components/layouts/Navbar";
+import Sidebar from "./components/layouts/Sidebar";
+import { useAuth } from "./hooks/useAuth";
+import AppRoutes from "./routes/AppRoutes";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// إنشاء نسخة واحدة من QueryClient
+const queryClient = new QueryClient();
 
 export default function App() {
+  const { cleanupAuth } = useAuth();
+
+  useEffect(() => {
+    // سيتم تنفيذ هذه الدالة فقط عند تفكيك (Unmount) تطبيق App
+    return () => {
+      cleanupAuth();
+    };
+  }, [cleanupAuth]);
+
   return (
-    <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden">
-      {/* The Sidebar handles its own mobile/desktop visibility */}
-      <Sidebar />
+    <QueryClientProvider client={queryClient}>
+      <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden">
+        <Sidebar />
 
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* The Navbar stays fixed at the top of the content area */}
-        <Navbar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <Navbar />
 
-        {/* The Main Content Area where AppRoutes injects the pages */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-          <AppRoutes />
-        </main>
+          <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+            <Suspense
+              fallback={
+                <div className="flex h-full items-center justify-center text-slate-500">
+                  Loading...
+                </div>
+              }
+            >
+              <AppRoutes />
+            </Suspense>
+          </main>
+          <ToastContainer position="bottom-right" autoClose={3000} />
+        </div>
       </div>
-    </div>
+    </QueryClientProvider>
   );
 }

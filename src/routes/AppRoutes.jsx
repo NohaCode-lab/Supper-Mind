@@ -1,14 +1,17 @@
-import { Routes, Route } from 'react-router-dom';
+import { lazy } from "react";
+import { Route, Routes } from "react-router-dom";
 
 // Route Guards
-import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute from "./ProtectedRoute";
 
-// Pages
-import Home from '../pages/Home'; // Assuming you have a basic landing page
-import Register from '../pages/Register';
-import Chat from '../pages/Chat';
-import Dashboard from '../pages/Dashboard'; // Placeholder if not yet fully built
-import NotFound from '../pages/NotFound';
+// Lazy-loaded Pages for aggressive code-splitting
+const Home = lazy(() => import("../pages/Home"));
+const Register = lazy(() => import("../pages/Register"));
+const Chat = lazy(() => import("../pages/Chat"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Settings = lazy(() => import("../pages/Settings"));
+const JournalFeature = lazy(() => import("../pages/JournalFeature"));
+const NotFound = lazy(() => import("../pages/NotFound"));
 
 export default function AppRoutes() {
   return (
@@ -28,6 +31,8 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/journal" element={<JournalFeature />} />
       </Route>
 
       {/* ------------------------------------------------------------------

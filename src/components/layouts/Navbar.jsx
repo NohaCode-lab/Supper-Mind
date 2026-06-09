@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { FiMenu, FiSun, FiMoon, FiGlobe, FiLogOut, FiUser } from 'react-icons/fi';
 import { useAppContext } from '../../context/AppContext';
-import { useAppStore } from '../../context/useAppStore';
+import { useAppStore } from '../../stores/useAppStore';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function Navbar() {

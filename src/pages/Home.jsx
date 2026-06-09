@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Home() {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="space-y-24 pb-12 animate-in fade-in duration-700">
@@ -33,23 +35,23 @@ export default function Home() {
 
         <div className="flex justify-center gap-4 flex-wrap">
           <Link 
-            to="/chat"
+            to={isAuthenticated ? "/chat" : "/register"}
             className="bg-teal-600 hover:bg-teal-700 px-6 py-3 rounded-xl text-white font-medium transition-all shadow-md hover:shadow-lg"
           >
             {t('home.btn_start', 'Get Started')}
           </Link>
 
-          <Link 
-            to="/dashboard"
-            className="border border-slate-300 dark:border-slate-700 px-6 py-3 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+          <a 
+            href="#features"
+            className="border border-slate-300 dark:border-slate-700 px-6 py-3 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
           >
             {t('home.btn_learn', 'Learn More')}
-          </Link>
+          </a>
         </div>
       </section>
 
       {/* FEATURES SECTION */}
-      <section className="px-6">
+      <section id="features" className="px-6 scroll-mt-20">
         <h2 className="text-center text-3xl font-bold mb-12 text-slate-800 dark:text-slate-100">
           {t('home.features_title', 'Why Supper Mind?')}
         </h2>
@@ -96,10 +98,10 @@ export default function Home() {
           {t('home.cta_desc', 'Join thousands improving their mental health with Supper Mind.')}
         </p>
         <Link 
-          to="/register"
+          to={isAuthenticated ? "/dashboard" : "/register"}
           className="bg-teal-600 hover:bg-teal-700 px-8 py-3 rounded-xl text-white font-medium transition-all shadow-md inline-block"
         >
-          {t('home.btn_register', 'Get Started Free')}
+          {isAuthenticated ? t('home.btn_dashboard', 'Go to Dashboard') : t('home.btn_register', 'Get Started Free')}
         </Link>
       </section>
 

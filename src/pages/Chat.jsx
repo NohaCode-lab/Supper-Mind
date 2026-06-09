@@ -1,65 +1,127 @@
-import { useState, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { FiSend, FiUser, FiHeart } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FiHeart, FiSend, FiUser } from "react-icons/fi";
 
 // 1. Import your decoupled services and global state
-import { generateAIResponse } from '../services/openai';
-import { useAppStore } from '../stores/useAppStore';
-import { handleAppError } from '../utils/helper';
+import { useAuth } from "../hooks/useAuth";
+import { generateAIResponse } from "../services/aiService";
+import { supabase } from "../services/supabase";
+import { useAppStore } from "../stores/useAppStore";
+import { handleAppError } from "../utils/helper";
 
 export default function Chat() {
   const { t } = useTranslation();
   const messagesEndRef = useRef(null);
-  
+
   // 2. Pull in global state to track user activity
   const incrementSessions = useAppStore((state) => state.incrementSessions);
 
-  const [inputValue, setInputValue] = useState('');
+  // جلب بيانات المستخدم الحالي من الـ Hook الخاص بالمصادقة
+  const { currentUser } = useAuth();
+
+  const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [messages, setMessages] = useState([
     {
-      role: 'assistant',
-      content: t('chat.welcome', 'Hi 👋 I am Supper Mind. How are you feeling today? Take your time.'),
-    }
+      role: "assistant",
+      content: t(
+        "chat.welcome",
+        "Hi 👋 I am Supper Mind. How are you feeling today? Take your time.",
+      ),
+    },
   ]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    // جلب سجل المحادثات من Supabase عند تحميل المكون
+    const loadChatHistory = async () => {
+      if (!currentUser) return;
+
+      try {
+        const { data, error } = await supabase
+          .from("chat_messages")
+          .select("role, content")
+          .eq("user_id", currentUser.id)
+          .order("created_at", { ascending: true });
+
+        if (error) throw error;
+        if (data && data.length > 0) {
+          setMessages(data);
+        }
+      } catch (error) {
+        console.error("Failed to load chat history:", error.message);
+      }
+    };
+
+    loadChatHistory();
+  }, [currentUser]); // نعتمد هنا على currentUser فقط لجلب البيانات عند تسجيل الدخول
+
+  useEffect(() => {
+    // التمرير لأسفل الشاشة بسلاسة كلما أضيفت رسالة جديدة
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]); // نعتمد هنا على تحديثات مصفوفة الرسائل
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading) return;
 
-    const userMessage = { role: 'user', content: inputValue };
+    const userMessage = { role: "user", content: inputValue };
     const updatedMessages = [...messages, userMessage];
-    
+
     setMessages(updatedMessages);
-    setInputValue('');
+    setInputValue("");
     setIsLoading(true);
 
     try {
+      // حفظ رسالة المستخدم في قاعدة البيانات
+      if (currentUser) {
+        await supabase.from("chat_messages").insert({
+          user_id: currentUser.id,
+          role: "user",
+          content: userMessage.content,
+        });
+      }
+
       // 3. Clean business logic: Send the history to the service layer
       const aiResponseText = await generateAIResponse(updatedMessages);
 
-      setMessages([...updatedMessages, { 
-        role: 'assistant', 
-        content: aiResponseText 
-      }]);
+      setMessages([
+        ...updatedMessages,
+        {
+          role: "assistant",
+          content: aiResponseText,
+        },
+      ]);
+
+      // حفظ رد الذكاء الاصطناعي في قاعدة البيانات
+      if (currentUser) {
+        await supabase.from("chat_messages").insert({
+          user_id: currentUser.id,
+          role: "assistant",
+          content: aiResponseText,
+        });
+      }
 
       // 4. Update the global dashboard stats seamlessly
       incrementSessions();
-
     } catch (error) {
       // 5. Use your unified error handler
-      handleAppError(error, t('chat.error_fallback', 'I am having trouble connecting right now.'));
-      
-      setMessages([...updatedMessages, { 
-        role: 'assistant', 
-        content: t('chat.error', 'I am having a little trouble connecting right now, but I am still here. Let us try again in a moment.') 
-      }]);
+      handleAppError(
+        error,
+        t("chat.error_fallback", "I am having trouble connecting right now."),
+      );
+
+      setMessages([
+        ...updatedMessages,
+        {
+          role: "assistant",
+          content: t(
+            "chat.error",
+            "I am having a little trouble connecting right now, but I am still here. Let us try again in a moment.",
+          ),
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +129,6 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)] max-w-4xl mx-auto w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm animate-in fade-in duration-500">
-      
       {/* Chat Header */}
       <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-md flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400">
@@ -75,10 +136,10 @@ export default function Chat() {
         </div>
         <div>
           <h2 className="text-lg font-medium text-slate-800 dark:text-slate-100">
-            {t('chat.title', 'Supper Mind Companion')}
+            {t("chat.title", "Supper Mind Companion")}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            {t('chat.status', 'Always here for you')}
+            {t("chat.status", "Always here for you")}
           </p>
         </div>
       </div>
@@ -86,16 +147,17 @@ export default function Chat() {
       {/* Chat Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {messages.map((msg, i) => (
-          <motion.div 
+          <motion.div
             key={i}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
           >
-            <div className={`flex gap-3 max-w-[80%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-              
+            <div
+              className={`flex gap-3 max-w-[80%] ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+            >
               <div className="shrink-0 mt-1">
-                {msg.role === 'user' ? (
+                {msg.role === "user" ? (
                   <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
                     <FiUser size={16} />
                   </div>
@@ -106,22 +168,21 @@ export default function Chat() {
                 )}
               </div>
 
-              <div 
+              <div
                 className={`px-5 py-3.5 rounded-2xl text-base ${
-                  msg.role === 'user' 
-                    ? 'bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 rounded-tr-sm' 
-                    : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100 rounded-tl-sm'
+                  msg.role === "user"
+                    ? "bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 rounded-tr-sm"
+                    : "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100 rounded-tl-sm"
                 }`}
               >
                 {msg.content}
               </div>
-
             </div>
           </motion.div>
         ))}
 
         {isLoading && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="flex justify-start"
@@ -133,20 +194,29 @@ export default function Chat() {
                 </div>
               </div>
               <div className="px-5 py-4 rounded-2xl bg-slate-100 dark:bg-slate-800 rounded-tl-sm flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div
+                  className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce"
+                  style={{ animationDelay: "0ms" }}
+                />
+                <div
+                  className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce"
+                  style={{ animationDelay: "150ms" }}
+                />
+                <div
+                  className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce"
+                  style={{ animationDelay: "300ms" }}
+                />
               </div>
             </div>
           </motion.div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
       <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-        <form 
+        <form
           onSubmit={handleSendMessage}
           className="flex items-center gap-3 relative max-w-3xl mx-auto"
         >
@@ -154,7 +224,10 @@ export default function Chat() {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder={t('chat.input_placeholder', 'Share what is on your mind...')}
+            placeholder={t(
+              "chat.input_placeholder",
+              "Share what is on your mind...",
+            )}
             className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-full px-6 py-3.5 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all placeholder:text-slate-400"
             disabled={isLoading}
           />
@@ -167,7 +240,6 @@ export default function Chat() {
           </button>
         </form>
       </div>
-
     </div>
   );
 }

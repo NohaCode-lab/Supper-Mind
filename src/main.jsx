@@ -6,17 +6,25 @@ import App from './App';
 import './index.css';
 
 // Initialize a query client for seamless server state management
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes cache to prevent excessive refetching
+      retry: 2,                 // Standardize retry logic for flaky networks
+      refetchOnWindowFocus: false, // Prevent UI jitter on tab switching
+    },
+  },
+});
 
 const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
 
 root.render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </QueryClientProvider>
-  </React.StrictMode>
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+ <App />
+      </BrowserRouter>
+    </QueryClientProvider>
+  </React.StrictMode>
 );

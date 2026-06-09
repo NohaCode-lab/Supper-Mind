@@ -1,60 +1,80 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { create } from "zustand";
+import { supabase } from "../services/supabase";
+import { ROUTES } from "../utils/constants";
+import { handleAppError } from "../utils/helper";
 
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '../services/supabase';
-import { handleAppError } from '../utils/helper';
-import { ROUTES } from '../utils/constants';
+// Singleton store to prevent multiple listeners and redundant network calls
+const useAuthStore = create((set) => {
+  let initialized = false;
+  let authSubscription = null;
+
+  return {
+    currentUser: null,
+    isAuthLoading: true,
+    initialize: async () => {
+      if (initialized) return;
+      initialized = true;
+
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+        if (error) throw error;
+        set({ currentUser: session?.user || null, isAuthLoading: false });
+      } catch (error) {
+        console.error("Session verification failed:", error);
+        set({ currentUser: null, isAuthLoading: false });
+      }
+
+      // Save the subscription to prevent memory leaks
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+        set({ currentUser: session?.user || null, isAuthLoading: false });
+      });
+
+      authSubscription = data.subscription;
+    },
+    cleanupAuth: () => {
+      if (authSubscription) {
+        authSubscription.unsubscribe();
+        authSubscription = null;
+      }
+      initialized = false;
+    },
+  };
+});
 
 export function useAuth() {
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
+  // Use atomic selectors to prevent unnecessary re-renders across the app
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
+  const initialize = useAuthStore((state) => state.initialize);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 1. Direct check for an existing session on initial load
-    const checkActiveSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) throw error;
-        
-        setCurrentUser(session?.user || null);
-      } catch (error) {
-        console.error('Session verification failed:', error);
-      } finally {
-        setIsAuthLoading(false);
-      }
-    };
-
-    checkActiveSession();
-
-    // 2. Setup a direct listener for authentication state changes (e.g., token refresh)
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setCurrentUser(session?.user || null);
-    });
-
-    // Clean up the listener when the component unmounts
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+    initialize();
+  }, [initialize]);
 
   // Direct logout handler
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      
+
       // Navigate strictly to the home page after a successful sign out
       navigate(ROUTES.HOME);
     } catch (error) {
-      handleAppError(error, 'Failed to sign out securely.');
+      handleAppError(error, "Failed to sign out securely.");
     }
   };
 
-  return { 
-    currentUser, 
-    isAuthLoading, 
+  return {
+    currentUser,
+    isAuthLoading,
     isAuthenticated: !!currentUser,
-    signOut 
+    signOut,
   };
 }

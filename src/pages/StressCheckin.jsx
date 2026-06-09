@@ -1,26 +1,7 @@
 import { useState } from "react";
 import { Card } from "../components/ui/Card";
 import Button from "../components/ui/Button";
-
-/* 🤖 AI Logic داخل نفس الملف */
-const getAIInsight = (level) => {
-  switch (level) {
-    case "Low 😌":
-      return "Great! Your stress level is low. Keep maintaining your routine 🌿";
-
-    case "Medium 😐":
-      return "You're slightly stressed. Consider a short break or walk 🚶‍♂️";
-
-    case "High 😰":
-      return "High stress detected. Try breathing exercises or disconnect for a while 🧘‍♂️";
-
-    case "Extreme 😵":
-      return "Critical stress level. Please rest immediately and avoid pressure ⚠️";
-
-    default:
-      return "";
-  }
-};
+import { getAIInsight } from "../services/aiService";
 
 function StressCheckin() {
   const [level, setLevel] = useState(null);

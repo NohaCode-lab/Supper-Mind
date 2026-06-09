@@ -1,6 +1,5 @@
-
 import { ToastContainer } from 'react-toastify';
-import { useAppStore } from '../../context/useAppStore';
+import { useAppStore } from '../../stores/useAppStore';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function ToastProvider() {
