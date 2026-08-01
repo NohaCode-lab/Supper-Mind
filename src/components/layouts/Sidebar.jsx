@@ -38,10 +38,10 @@ export default function Sidebar() {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed md:static inset-y-0 left-0 rtl:left-auto rtl:right-0 z-50 w-64 bg-white dark:bg-slate-900 border-r rtl:border-r-0 rtl:border-l border-slate-200 dark:border-slate-800 flex flex-col justify-between transition-transform duration-300 transform ${
+        className={`fixed md:static inset-y-0 left-0 rtl:left-auto rtl:right-0 z-50 w-64 bg-white dark:bg-slate-900 border-r rtl:border-r-0 rtl:border-l border-slate-200 dark:border-slate-800 flex flex-col justify-between transition-transform duration-300 transform shrink-0 ${
           isMobileMenuOpen
             ? "translate-x-0"
-            : "-translate-x-full rtl:translate-x-full md:translate-x-0"
+            : "-translate-x-full rtl:translate-x-full md:translate-x-0 md:rtl:translate-x-0"
         }`}
       >
         <div>
