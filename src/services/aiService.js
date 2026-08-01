@@ -1,7 +1,8 @@
 import OpenAI from "openai";
+import { useHabitStore } from "../stores/useHabitStore";
+import { useAppStore } from "../stores/useAppStore";
+import { useAuthStore } from "../stores/useAuthStore";
 
-// Secure initialization: If API key is present in server/edge proxy use it,
-// otherwise gracefully fallback to an empathetic AI simulation for browser safety.
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
 const EMPATHY_RESPONSES = [
@@ -12,7 +13,28 @@ const EMPATHY_RESPONSES = [
 ];
 
 export const generateAIResponse = async (chatHistory) => {
-  // If API key is configured safely or passed via backend proxy
+  // Extract user context dynamically to make the AI assistant context-aware
+  const currentUser = useAuthStore.getState().currentUser;
+  const habits = useHabitStore.getState().habits || [];
+  const { aiTone, primaryGoal } = useAppStore.getState();
+
+  const userName = currentUser?.user_metadata?.full_name?.split(" ")[0] || "Friend";
+  const activeHabitsCount = habits.length;
+  const completedTodayCount = habits.filter(
+    (h) => h.last_completed === new Date().toISOString().split("T")[0]
+  ).length;
+
+  const systemPrompt = `You are Supper Mind, a personal SaaS mental wellness coach speaking to ${userName}.
+User Context:
+- Current Active Habits: ${activeHabitsCount} habits (${completedTodayCount} completed today).
+- Primary Focus: ${primaryGoal || "Stress Relief & Habits"}.
+- Preferred Conversation Tone: ${aiTone || "Empathetic & Soothing"}.
+
+Guidelines:
+1. Be calm, empathetic, and encouraging.
+2. Refer to their current daily progress subtly if relevant.
+3. Keep responses concise (2-4 sentences max).`;
+
   if (apiKey && apiKey !== "your_openai_api_key_here") {
     try {
       const openai = new OpenAI({
@@ -22,31 +44,27 @@ export const generateAIResponse = async (chatHistory) => {
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are Supper Mind, a mental health supportive AI. Be calm, empathetic, and helpful. Keep responses short, soothing, and use simple language.",
-          },
-          ...chatHistory,
-        ],
+        messages: [{ role: "system", content: systemPrompt }, ...chatHistory],
       });
 
       return response.choices[0]?.message?.content || EMPATHY_RESPONSES[0];
     } catch (error) {
-      console.warn("OpenAI API call unavailable, switching to local empathy engine:", error.message);
+      console.warn("OpenAI API call unavailable, using context-aware simulation:", error.message);
     }
   }
 
-  // Simulated AI delay + empathetic response fallback for safety & demo
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Simulated Context-Aware Response Engine
+  await new Promise((resolve) => setTimeout(resolve, 800));
   const userLastMsg = chatHistory[chatHistory.length - 1]?.content?.toLowerCase() || "";
 
-  if (userLastMsg.includes("anxious") || userLastMsg.includes("stress")) {
-    return "Feeling anxious or stressed can be overwhelming. Try closing your eyes for 3 seconds and slowly breathing out. You are safe and doing your best.";
+  if (userLastMsg.includes("habit") || userLastMsg.includes("streak") || userLastMsg.includes("progress")) {
+    return `You're making great strides, ${userName}! You've completed ${completedTodayCount} of your ${activeHabitsCount} habits today. Keep building momentum at your own pace!`;
   }
-  if (userLastMsg.includes("sad") || userLastMsg.includes("tired")) {
-    return "It is completely okay to feel tired or down sometimes. Rest is productivity too. Have you had enough water and fresh air today?";
+  if (userLastMsg.includes("anxious") || userLastMsg.includes("stress")) {
+    return `Feeling stressed is tough, ${userName}. Since your focus is ${primaryGoal}, try taking 3 slow box-breaths in our Stress Check-in tab. You are safe.`;
+  }
+  if (userLastMsg.includes("hello") || userLastMsg.includes("hi")) {
+    return `Hello ${userName}! 👋 How are you feeling today? I am here to listen and help you find mental clarity.`;
   }
 
   const randomIndex = Math.floor(Math.random() * EMPATHY_RESPONSES.length);

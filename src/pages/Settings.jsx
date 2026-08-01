@@ -1,143 +1,187 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FiMoon, FiSun, FiGlobe, FiUser, FiLock } from "react-icons/fi";
+import { FiUser, FiGlobe, FiMoon, FiShield, FiCheck, FiRefreshCw } from "react-icons/fi";
 import { useAppStore } from "../stores/useAppStore";
-import { useAuth } from "../hooks/useAuth";
-import { supabase } from "../services/supabase";
+import { useAuthStore } from "../stores/useAuthStore";
+import { profileSchema } from "../utils/validators";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
+import Card from "../components/ui/Card";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
-  const { isDarkMode, toggleTheme } = useAppStore();
-  const { currentUser } = useAuth();
+  const { isDarkMode, toggleTheme, primaryGoal, setPrimaryGoal, aiTone, setAiTone, setOnboardingComplete } = useAppStore();
+  const { currentUser, setUser } = useAuthStore();
 
-  const [newPassword, setNewPassword] = useState("");
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
+  const [fullName, setFullName] = useState(currentUser?.user_metadata?.full_name || "Alex Vance");
+  const [email, setEmail] = useState(currentUser?.email || "alex.dev@suppermind.com");
+  const [goal, setGoal] = useState(primaryGoal || "stress");
+  const [tone, setTone] = useState(aiTone || "Empathetic & Soothing");
 
-  const handlePasswordChange = async (e) => {
+  const [errors, setErrors] = useState({});
+  const [isSaved, setIsSaved] = useState(false);
+
+  const handleSaveProfile = (e) => {
     e.preventDefault();
-    if (!newPassword || newPassword.length < 6) {
-      setMessage({ type: "error", text: t("settings.password_length_error", "Password must be at least 6 characters.") });
+    setErrors({});
+    setIsSaved(false);
+
+    const validation = profileSchema.safeParse({
+      fullName,
+      email,
+      primaryGoal: goal,
+      aiTone: tone,
+    });
+
+    if (!validation.success) {
+      const fieldErrors = {};
+      validation.error.issues.forEach((issue) => {
+        fieldErrors[issue.path[0]] = issue.message;
+      });
+      setErrors(fieldErrors);
       return;
     }
 
-    setIsUpdating(true);
-    setMessage({ type: "", text: "" });
+    // Save profile updates
+    setUser({
+      ...currentUser,
+      email,
+      user_metadata: { ...currentUser?.user_metadata, full_name: fullName },
+    });
+    setPrimaryGoal(goal);
+    setAiTone(tone);
 
-    try {
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) throw error;
-      
-      setMessage({ type: "success", text: t("settings.password_success", "Password updated successfully!") });
-      setNewPassword("");
-    } catch (error) {
-      setMessage({ type: "error", text: error.message || t("settings.password_error", "Failed to update password.") });
-    } finally {
-      setIsUpdating(false);
-    }
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 3000);
   };
 
   const toggleLanguage = () => {
-    const nextLang = i18n.language.startsWith("en") ? "de" : "en";
+    const nextLang = i18n.language?.startsWith("en") ? "de" : "en";
     i18n.changeLanguage(nextLang);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
-      {/* عنوان الصفحة */}
       <header>
-        <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
-          {t("settings.title", "Settings")}
+        <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3">
+          <FiUser className="text-teal-600 dark:text-teal-400" />
+          Account & SaaS Settings
         </h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-2">
-          {t("settings.subtitle", "Manage your account preferences and app settings.")}
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Manage your personal profile, AI coach preferences, and application settings.
         </p>
       </header>
 
-      <div className="space-y-6">
-        {/* قسم الملف الشخصي */}
-        <section className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <FiUser className="text-teal-600 dark:text-teal-400" />
-            {t("settings.profile", "Profile Information")}
-          </h2>
-          <div className="flex flex-col gap-2">
-            <div className="text-sm text-slate-500 dark:text-slate-400">{t("settings.email", "Email Address")}</div>
-            <div className="font-medium text-slate-900 dark:text-slate-100">{currentUser?.email || "Not available"}</div>
-          </div>
-        </section>
+      {/* Profile Form */}
+      <Card>
+        <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
+          <FiUser className="text-teal-500" /> User Profile Information
+        </h2>
 
-        {/* قسم التفضيلات */}
-        <section className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <FiGlobe className="text-teal-600 dark:text-teal-400" />
-            {t("settings.preferences", "Preferences")}
-          </h2>
-          
-          <div className="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800">
-            <div>
-              <div className="font-medium text-slate-900 dark:text-slate-100">{t("settings.theme", "Appearance")}</div>
-              <div className="text-sm text-slate-500 dark:text-slate-400">{t("settings.theme_desc", "Toggle between light and dark mode")}</div>
-            </div>
-            <button
-              onClick={toggleTheme}
-              className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm"
-            >
-              {isDarkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
-            </button>
+        <form onSubmit={handleSaveProfile} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              error={errors.fullName}
+            />
+            <Input
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={errors.email}
+            />
           </div>
 
-          <div className="flex items-center justify-between py-3">
-            <div>
-              <div className="font-medium text-slate-900 dark:text-slate-100">{t("settings.language", "Language")}</div>
-              <div className="text-sm text-slate-500 dark:text-slate-400">{t("settings.language_desc", "Change the application language")}</div>
-            </div>
-            <button
-              onClick={toggleLanguage}
-              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium uppercase tracking-wider text-sm shadow-sm"
-            >
-              {i18n.language.substring(0, 2)}
-            </button>
-          </div>
-        </section>
-
-        {/* قسم الأمان */}
-        <section className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <FiLock className="text-teal-600 dark:text-teal-400" />
-            {t("settings.security", "Security")}
-          </h2>
-          
-          <form onSubmit={handlePasswordChange} className="space-y-4 max-w-sm">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                {t("settings.new_password", "New Password")}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                Primary Wellness Goal
               </label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-teal-500"
-              />
+              <select
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-sm transition-all"
+              >
+                <option value="stress">Stress & Anxiety Relief</option>
+                <option value="habits">Build Healthy Habits</option>
+                <option value="mood">Track Mood Patterns</option>
+                <option value="mindfulness">Mindfulness & Gratitude</option>
+              </select>
             </div>
 
-            {message.text && (
-              <div className={`p-3 rounded-lg text-sm ${message.type === "error" ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"}`}>
-                {message.text}
-              </div>
-            )}
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                AI Coach Persona Tone
+              </label>
+              <select
+                value={tone}
+                onChange={(e) => setTone(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-sm transition-all"
+              >
+                <option value="Empathetic & Soothing">Empathetic & Soothing</option>
+                <option value="Direct & Action-Oriented">Direct & Action-Oriented</option>
+                <option value="Guided & Reflective">Guided & Reflective</option>
+              </select>
+            </div>
+          </div>
 
-            <button
-              type="submit"
-              disabled={isUpdating || !newPassword}
-              className="rounded-lg bg-teal-600 px-4 py-2 font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-slate-900 transition-colors"
-            >
-              {isUpdating ? t("settings.updating", "Updating...") : t("settings.update_password", "Update Password")}
-            </button>
-          </form>
-        </section>
+          <div className="flex items-center gap-4 pt-4">
+            <Button type="submit">Save Changes</Button>
+            {isSaved && (
+              <span className="text-xs font-semibold text-teal-600 dark:text-teal-400 flex items-center gap-1">
+                <FiCheck /> Settings saved successfully!
+              </span>
+            )}
+          </div>
+        </form>
+      </Card>
+
+      {/* Preferences & System Settings */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+            <FiMoon className="text-amber-500" /> Interface & Theme
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+            Switch between light and dark modes according to your preference.
+          </p>
+          <Button variant="outline" onClick={toggleTheme} className="w-full">
+            Toggle {isDarkMode ? "Light Mode ☀️" : "Dark Mode 🌙"}
+          </Button>
+        </Card>
+
+        <Card>
+          <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+            <FiGlobe className="text-teal-500" /> Language & Regional
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+            Active Language: <strong className="uppercase">{i18n.language || "EN"}</strong>
+          </p>
+          <Button variant="outline" onClick={toggleLanguage} className="w-full">
+            Switch Language (EN / DE)
+          </Button>
+        </Card>
       </div>
+
+      {/* Onboarding Reset */}
+      <Card>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2 text-sm">
+              <FiRefreshCw className="text-teal-500" /> Re-run Setup Wizard
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Want to re-select your initial goals or starter habits?
+            </p>
+          </div>
+          <Button variant="secondary" size="sm" onClick={() => setOnboardingComplete(false)}>
+            Launch Wizard
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 }

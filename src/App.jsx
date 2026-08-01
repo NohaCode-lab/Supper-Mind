@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Navbar from "./components/layouts/Navbar";
 import Sidebar from "./components/layouts/Sidebar";
 import AppRoutes from "./routes/AppRoutes";
+import OnboardingModal from "./features/onboarding/OnboardingModal";
 
 export default function App() {
   return (
@@ -23,6 +24,9 @@ export default function App() {
           </Suspense>
         </main>
       </div>
+
+      {/* Onboarding Wizard for new users */}
+      <OnboardingModal />
     </div>
   );
 }

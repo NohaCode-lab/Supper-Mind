@@ -1,101 +1,115 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "../services/supabase";
+import { Link, useNavigate } from "react-router-dom";
+import { FiHeart } from "react-icons/fi";
+import { registerSchema } from "../utils/validators";
+import { useAuthStore } from "../stores/useAuthStore";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
 
 export default function Register() {
-  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const navigate = useNavigate();
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRegister = (e) => {
     e.preventDefault();
-    setLoading(true);
-    setErrorMsg("");
+    setErrors({});
 
-    try {
-      let authError;
+    const validation = registerSchema.safeParse({
+      fullName,
+      email,
+      password,
+      confirmPassword,
+    });
 
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        authError = error;
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-        authError = error;
-      }
-
-      if (authError) throw authError;
-
-      // بعد النجاح، قم بتوجيه المستخدم إلى لوحة التحكم
-      // سيتم السماح له بالمرور بفضل ProtectedRoute و useAuth
-      navigate("/dashboard", { replace: true });
-    } catch (error) {
-      setErrorMsg(error.message || "حدث خطأ أثناء المصادقة.");
-    } finally {
-      setLoading(false);
+    if (!validation.success) {
+      const fieldErrors = {};
+      validation.error.issues.forEach((issue) => {
+        fieldErrors[issue.path[0]] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
     }
+
+    setIsLoading(true);
+    setTimeout(() => {
+      setUser({
+        id: `user-${Date.now()}`,
+        email,
+        user_metadata: { full_name: fullName },
+      });
+      setIsLoading(false);
+      navigate("/dashboard");
+    }, 600);
   };
 
   return (
-    <div className="flex min-h-full items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-        <h2 className="mb-6 text-center text-2xl font-bold text-slate-900 dark:text-white">
-          {isLogin ? "تسجيل الدخول" : "إنشاء حساب جديد"}
-        </h2>
+    <div className="min-h-[85vh] flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-lg space-y-6">
+        <div className="text-center space-y-2">
+          <div className="w-12 h-12 rounded-2xl bg-teal-600 flex items-center justify-center text-white mx-auto shadow-md">
+            <FiHeart size={24} />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Create Account</h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Start your personalized wellness journey today.
+          </p>
+        </div>
 
-        {errorMsg && (
-          <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
-            {errorMsg}
-          </div>
-        )}
+        <form onSubmit={handleRegister} className="space-y-4">
+          <Input
+            label="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            error={errors.fullName}
+            placeholder="Alex Vance"
+          />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">البريد الإلكتروني</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-teal-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">كلمة المرور</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-teal-500"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-teal-600 px-4 py-2 font-semibold text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-slate-900 transition-colors"
-          >
-            {loading ? "جاري المعالجة..." : isLogin ? "دخول" : "تسجيل"}
-          </button>
+          <Input
+            label="Email Address"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={errors.email}
+            placeholder="you@example.com"
+          />
+
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={errors.password}
+            placeholder="••••••••"
+          />
+
+          <Input
+            label="Confirm Password"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            error={errors.confirmPassword}
+            placeholder="••••••••"
+          />
+
+          <Button type="submit" isLoading={isLoading} className="w-full">
+            Create Free Account
+          </Button>
         </form>
 
-        <div className="mt-6 text-center">
-          <button
-            type="button"
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-sm text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
-          >
-            {isLogin ? "ليس لديك حساب؟ قم بإنشاء حساب جديد" : "لديك حساب بالفعل؟ قم بتسجيل الدخول"}
-          </button>
-        </div>
+        <p className="text-xs text-center text-slate-500 dark:text-slate-400">
+          Already registered?{" "}
+          <Link to="/login" className="text-teal-600 dark:text-teal-400 font-semibold hover:underline">
+            Sign in here
+          </Link>
+        </p>
       </div>
     </div>
   );
