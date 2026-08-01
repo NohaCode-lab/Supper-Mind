@@ -1,6 +1,7 @@
 {
   "navigation": {
     "greeting": "مرحباً بعودتك",
+    "welcomeApp": "مرحباً بك في SupperMind",
     "home": "الرئيسية",
     "dashboard": "لوحة التحكم",
     "chat": "مساعد الذكاء الاصطناعي",

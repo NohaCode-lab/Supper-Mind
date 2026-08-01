@@ -14,6 +14,14 @@ export default function Navbar() {
   const { currentUser, signOut } = useAuth();
   const [isPricingOpen, setIsPricingOpen] = useState(false);
 
+  const isAuthenticated = Boolean(
+    currentUser &&
+    currentUser.id &&
+    currentUser.email &&
+    currentUser.id !== "guest-user-123" &&
+    currentUser.email !== "guest@suppermind.com"
+  );
+
   const displayName = getUserDisplayName(currentUser, t);
 
   return (
@@ -30,8 +38,14 @@ export default function Navbar() {
           </button>
 
           <h2 className="hidden md:block text-lg font-semibold text-slate-800 dark:text-slate-100">
-            {t("navigation.greeting", "Welcome back")},{" "}
-            <span className="text-teal-600 dark:text-teal-400">{displayName}</span>
+            {isAuthenticated ? (
+              <>
+                {t("navigation.greeting", "Welcome back")},{" "}
+                <span className="text-teal-600 dark:text-teal-400">{displayName}</span>
+              </>
+            ) : (
+              <span>{t("navigation.welcomeApp", "Welcome to SupperMind")}</span>
+            )}
           </h2>
         </div>
 
@@ -62,7 +76,7 @@ export default function Navbar() {
 
           {/* User Info & Actions */}
           <div className="flex items-center gap-3">
-            {currentUser ? (
+            {isAuthenticated ? (
               <>
                 <div className="hidden sm:flex flex-col items-end rtl:items-start whitespace-nowrap">
                   <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight">

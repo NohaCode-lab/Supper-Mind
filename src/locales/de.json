@@ -1,6 +1,7 @@
 {
   "navigation": {
     "greeting": "Willkommen zurück",
+    "welcomeApp": "Willkommen bei SupperMind",
     "home": "Startseite",
     "dashboard": "Dashboard",
     "chat": "KI-Begleiter",
