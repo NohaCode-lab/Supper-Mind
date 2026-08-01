@@ -10,7 +10,7 @@ import LanguageSwitcher from "../shared/LanguageSwitcher";
 
 export default function Navbar() {
   const { t } = useTranslation();
-  const { isDarkMode, toggleTheme, toggleMobileMenu } = useAppStore();
+  const { isDarkMode, toggleTheme, toggleMobileMenu, closeMobileMenu } = useAppStore();
   const { currentUser, signOut } = useAuth();
   const [isPricingOpen, setIsPricingOpen] = useState(false);
 
