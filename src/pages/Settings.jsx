@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FiUser, FiGlobe, FiMoon, FiShield, FiCheck, FiRefreshCw } from "react-icons/fi";
+import { FiUser, FiGlobe, FiMoon, FiCheck, FiRefreshCw } from "react-icons/fi";
 import { useAppStore } from "../stores/useAppStore";
 import { useAuthStore } from "../stores/useAuthStore";
 import { profileSchema } from "../utils/validators";
@@ -9,12 +9,12 @@ import Input from "../components/ui/Input";
 import Card from "../components/ui/Card";
 
 export default function Settings() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { isDarkMode, toggleTheme, primaryGoal, setPrimaryGoal, aiTone, setAiTone, setOnboardingComplete } = useAppStore();
   const { currentUser, setUser } = useAuthStore();
 
-  const [fullName, setFullName] = useState(currentUser?.user_metadata?.full_name || "Alex Vance");
-  const [email, setEmail] = useState(currentUser?.email || "alex.dev@suppermind.com");
+  const [fullName, setFullName] = useState(currentUser?.user_metadata?.full_name || "");
+  const [email, setEmail] = useState(currentUser?.email || "");
   const [goal, setGoal] = useState(primaryGoal || "stress");
   const [tone, setTone] = useState(aiTone || "Empathetic & Soothing");
 
@@ -85,6 +85,7 @@ export default function Settings() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               error={errors.fullName}
+              placeholder="Your Full Name"
             />
             <Input
               label="Email Address"
@@ -92,6 +93,7 @@ export default function Settings() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
+              placeholder="you@example.com"
             />
           </div>
 

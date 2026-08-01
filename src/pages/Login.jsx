@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiHeart, FiLock, FiMail } from "react-icons/fi";
+import { FiHeart } from "react-icons/fi";
 import { loginSchema } from "../utils/validators";
 import { useAuthStore } from "../stores/useAuthStore";
 import Button from "../components/ui/Button";
@@ -10,8 +10,8 @@ export default function Login() {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
-  const [email, setEmail] = useState("alex.dev@suppermind.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,14 +31,17 @@ export default function Login() {
 
     setIsLoading(true);
     setTimeout(() => {
+      const nameFromEmail = email.split("@")[0] || "User";
+      const formattedName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
+
       setUser({
-        id: "demo-user-123",
+        id: `user-${Date.now()}`,
         email,
-        user_metadata: { full_name: email.split("@")[0] || "User" },
+        user_metadata: { full_name: formattedName },
       });
       setIsLoading(false);
       navigate("/dashboard");
-    }, 600);
+    }, 500);
   };
 
   return (
