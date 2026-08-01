@@ -139,7 +139,7 @@
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "fullName": "Full Name",
-    "signInBtn": "Sign In to Account",
+    "signInBtn": "Sign In",
     "createBtn": "Create Free Account",
     "noAccount": "Don't have an account?",
     "haveAccount": "Already registered?",

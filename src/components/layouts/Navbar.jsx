@@ -117,7 +117,8 @@ export default function Navbar() {
 
                 <Link
                   to="/login"
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white rounded-xl text-xs font-semibold transition-all shadow-xs shrink-0"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white rounded-xl text-xs font-semibold transition-all shadow-xs shrink-0 cursor-pointer"
                 >
                   <FiLogIn size={14} />
                   <span>{t("auth.signInBtn", "Sign In")}</span>

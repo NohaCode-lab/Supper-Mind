@@ -1,8 +1,8 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export default function ProtectedRoute() {
-  const { isAuthLoading } = useAuth();
+  const { currentUser, isAuthLoading } = useAuth();
 
   if (isAuthLoading) {
     return (
@@ -10,6 +10,10 @@ export default function ProtectedRoute() {
         Loading page...
       </div>
     );
+  }
+
+  if (!currentUser) {
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;
