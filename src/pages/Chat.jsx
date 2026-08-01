@@ -11,7 +11,6 @@ export default function Chat() {
   const { t } = useTranslation();
   const messagesEndRef = useRef(null);
   const incrementSessions = useAppStore((state) => state.incrementSessions);
-  const { currentUser } = useAuth();
 
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +19,7 @@ export default function Chat() {
     {
       role: "assistant",
       content: t(
-        "chat.welcome",
+        "aiCompanion.welcomeMessage",
         "Hi 👋 I am Supper Mind. How are you feeling today? Take your time."
       ),
     },
@@ -56,7 +55,7 @@ export default function Chat() {
     } catch (error) {
       handleAppError(
         error,
-        t("chat.error_fallback", "I am having trouble connecting right now.")
+        t("aiCompanion.errorFallback", "I am having trouble connecting right now.")
       );
 
       setMessages([
@@ -64,7 +63,7 @@ export default function Chat() {
         {
           role: "assistant",
           content: t(
-            "chat.error",
+            "aiCompanion.errorFallback",
             "I am having a little trouble connecting right now, but I am still here. Let us try again in a moment."
           ),
         },
@@ -83,10 +82,10 @@ export default function Chat() {
         </div>
         <div>
           <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">
-            {t("chat.title", "Supper Mind AI Companion")}
+            {t("aiCompanion.title", "Supper Mind AI Companion")}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            {t("chat.status", "Empathetic digital listener — Always here for you")}
+            {t("aiCompanion.subtitle", "Empathetic digital listener — Always here for you")}
           </p>
         </div>
       </div>
@@ -165,7 +164,7 @@ export default function Chat() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={t(
-              "chat.input_placeholder",
+              "aiCompanion.inputPlaceholder",
               "Share what is on your mind..."
             )}
             className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-full px-6 py-3.5 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-sm transition-all placeholder:text-slate-400"
@@ -175,7 +174,7 @@ export default function Chat() {
             type="submit"
             disabled={!inputValue.trim() || isLoading}
             aria-label="Send message"
-            className="absolute right-2 p-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded-full transition-colors flex items-center justify-center shadow-xs"
+            className="absolute right-2 rtl:right-auto rtl:left-2 p-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded-full transition-colors flex items-center justify-center shadow-xs"
           >
             <FiSend size={16} />
           </button>

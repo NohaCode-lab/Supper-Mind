@@ -29,10 +29,8 @@ export default function Navbar() {
           </button>
 
           <h2 className="hidden md:block text-lg font-semibold text-slate-800 dark:text-slate-100">
-            {t("nav.greeting", "Welcome back")},{" "}
-            <span className="text-teal-600 dark:text-teal-400">
-              {displayName}
-            </span>
+            {t("navigation.greeting", "Welcome back")},{" "}
+            <span className="text-teal-600 dark:text-teal-400">{displayName}</span>
           </h2>
         </div>
 
@@ -43,7 +41,7 @@ export default function Navbar() {
             onClick={() => setIsPricingOpen(true)}
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold transition-all"
           >
-            <FiZap className="text-amber-500" /> Upgrade Pro
+            <FiZap className="text-amber-500" /> {t("navigation.upgradePro", "Upgrade Pro")}
           </button>
 
           {/* Interactive Language Selector Dropdown */}
@@ -63,9 +61,9 @@ export default function Navbar() {
 
           {/* User Info & Logout */}
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex flex-col items-end">
+            <div className="hidden sm:flex flex-col items-end rtl:items-start">
               <span className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-tight">
-                {currentUser?.user_metadata?.full_name || currentUser?.full_name || displayName}
+                {currentUser?.user_metadata?.full_name || displayName}
               </span>
               <span className="text-xs text-slate-500 dark:text-slate-400 leading-tight">
                 {currentUser?.email || "guest@suppermind.com"}
@@ -79,8 +77,8 @@ export default function Navbar() {
             <button
               onClick={signOut}
               className="p-2 text-slate-400 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/30"
-              aria-label="Sign out of application"
-              title="Sign out"
+              aria-label={t("navigation.signOut", "Sign out")}
+              title={t("navigation.signOut", "Sign out")}
             >
               <FiLogOut size={18} />
             </button>

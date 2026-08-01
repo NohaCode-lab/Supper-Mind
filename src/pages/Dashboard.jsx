@@ -49,7 +49,7 @@ export default function Dashboard() {
           <span className="text-teal-600 dark:text-teal-400">{displayName}</span> 👋
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Welcome back to your calm digital space. Here is your wellness snapshot.
+          {t("dashboard.subtitle", "Welcome back to your calm digital space. Here is your wellness snapshot.")}
         </p>
       </header>
 
@@ -62,12 +62,12 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              {t("dashboard.stat_streak", "Habit Streak")}
+              {t("dashboard.statStreak", "Habit Streak")}
             </p>
             <h3 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">
               {totalStreak}{" "}
               <span className="text-xs font-normal text-slate-500">
-                {t("dashboard.stat_days", "Days")}
+                {t("dashboard.statDays", "Days")}
               </span>
             </h3>
           </div>
@@ -80,7 +80,7 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              {t("dashboard.stat_sessions", "AI Sessions")}
+              {t("dashboard.statSessions", "AI Sessions")}
             </p>
             <h3 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">
               {sessionsCompleted}
@@ -95,7 +95,7 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              {t("dashboard.stat_moods", "Mood Logs")}
+              {t("dashboard.statMoods", "Mood Logs")}
             </p>
             <h3 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">
               {moodHistory?.length || 0}
@@ -110,7 +110,7 @@ export default function Dashboard() {
         <div className="lg:col-span-1 space-y-6">
           <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
             <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">
-              {t("dashboard.log_title", "How are you feeling?")}
+              {t("dashboard.logTitle", "How are you feeling?")}
             </h2>
 
             <form onSubmit={handleLogMood} className="space-y-4">
@@ -138,7 +138,7 @@ export default function Dashboard() {
                 value={moodNote}
                 onChange={(e) => setMoodNote(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/50 resize-none"
-                placeholder="Add a short note about your mood..."
+                placeholder={t("dashboard.notePlaceholder", "Add a short note about your mood...")}
                 rows={3}
               />
 
@@ -147,7 +147,7 @@ export default function Dashboard() {
                 disabled={!selectedMood || isLoggingMood}
                 className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2.5 rounded-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-xs"
               >
-                {isLoggingMood ? "Saving..." : "Save Entry"}
+                {isLoggingMood ? t("dashboard.saving", "Saving...") : t("dashboard.saveEntry", "Save Entry")}
               </button>
             </form>
           </div>
@@ -161,7 +161,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <FiClock className="text-teal-600 dark:text-teal-400" />
-                {t("dashboard.history_title", "Recent Mood History")}
+                {t("dashboard.historyTitle", "Recent Mood History")}
               </h2>
             </div>
 
@@ -204,7 +204,7 @@ export default function Dashboard() {
               <div className="text-center py-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
                 <p className="text-slate-500 dark:text-slate-400 text-sm">
                   {t(
-                    "dashboard.empty_state",
+                    "dashboard.emptyState",
                     "No entries yet. Log how you are feeling to see your history."
                   )}
                 </p>

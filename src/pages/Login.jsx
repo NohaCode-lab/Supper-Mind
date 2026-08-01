@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { loginSchema } from "../utils/validators";
@@ -7,6 +8,7 @@ import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 
 export default function Login() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
@@ -51,15 +53,17 @@ export default function Login() {
           <div className="w-12 h-12 rounded-2xl bg-teal-600 flex items-center justify-center text-white mx-auto shadow-md">
             <FiHeart size={24} />
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Welcome Back</h1>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+            {t("auth.loginTitle", "Welcome Back")}
+          </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Sign in to continue your mental wellness journey.
+            {t("auth.loginSubtitle", "Sign in to continue your mental wellness journey.")}
           </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <Input
-            label="Email Address"
+            label={t("auth.email", "Email Address")}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -68,7 +72,7 @@ export default function Login() {
           />
 
           <Input
-            label="Password"
+            label={t("auth.password", "Password")}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -77,14 +81,14 @@ export default function Login() {
           />
 
           <Button type="submit" isLoading={isLoading} className="w-full">
-            Sign In to Account
+            {t("auth.signInBtn", "Sign In to Account")}
           </Button>
         </form>
 
         <p className="text-xs text-center text-slate-500 dark:text-slate-400">
-          Don't have an account?{" "}
+          {t("auth.noAccount", "Don't have an account?")}{" "}
           <Link to="/register" className="text-teal-600 dark:text-teal-400 font-semibold hover:underline">
-            Create one free
+            {t("auth.signUpLink", "Create one free")}
           </Link>
         </p>
       </div>

@@ -17,12 +17,12 @@ export default function Sidebar() {
   const { isMobileMenuOpen, closeMobileMenu } = useAppStore();
 
   const navItems = [
-    { path: "/dashboard", label: t("nav.dashboard", "Dashboard"), icon: FiGrid },
-    { path: "/chat", label: t("nav.chat", "AI Companion"), icon: FiMessageSquare },
-    { path: "/habits", label: t("nav.habits", "Habits Tracker"), icon: FiCheckSquare },
-    { path: "/journal", label: t("nav.journal", "Daily Journal"), icon: FiBookOpen },
-    { path: "/stress", label: t("nav.stress", "Stress Check-in"), icon: FiWind },
-    { path: "/settings", label: t("nav.settings", "Settings"), icon: FiSettings },
+    { path: "/dashboard", label: t("navigation.dashboard", "Dashboard"), icon: FiGrid },
+    { path: "/chat", label: t("navigation.chat", "AI Companion"), icon: FiMessageSquare },
+    { path: "/habits", label: t("navigation.habits", "Habits Tracker"), icon: FiCheckSquare },
+    { path: "/journal", label: t("navigation.journal", "Daily Journal"), icon: FiBookOpen },
+    { path: "/stress", label: t("navigation.stress", "Stress Check-in"), icon: FiWind },
+    { path: "/settings", label: t("navigation.settings", "Settings"), icon: FiSettings },
   ];
 
   return (
@@ -38,8 +38,10 @@ export default function Sidebar() {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between transition-transform duration-300 transform ${
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        className={`fixed md:static inset-y-0 left-0 rtl:left-auto rtl:right-0 z-50 w-64 bg-white dark:bg-slate-900 border-r rtl:border-r-0 rtl:border-l border-slate-200 dark:border-slate-800 flex flex-col justify-between transition-transform duration-300 transform ${
+          isMobileMenuOpen
+            ? "translate-x-0"
+            : "-translate-x-full rtl:translate-x-full md:translate-x-0"
         }`}
       >
         <div>
@@ -61,7 +63,7 @@ export default function Sidebar() {
             <button
               onClick={closeMobileMenu}
               className="md:hidden p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg"
-              aria-label="Close menu"
+              aria-label={t("common.close", "Close menu")}
             >
               <FiX size={20} />
             </button>
@@ -96,9 +98,9 @@ export default function Sidebar() {
         <div className="p-4 border-t border-slate-200 dark:border-slate-800">
           <div className="p-4 rounded-2xl bg-teal-50/50 dark:bg-slate-800/50 border border-teal-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
             <p className="font-semibold text-slate-800 dark:text-slate-200 mb-1">
-              🌱 SaaS Wellness Platform
+              🌱 {t("navigation.brandSubtitle", "SaaS Wellness Platform")}
             </p>
-            <p>Empowering mental clarity & healthy habits daily.</p>
+            <p>{t("navigation.brandTagline", "Empowering mental clarity & healthy habits daily.")}</p>
           </div>
         </div>
       </aside>

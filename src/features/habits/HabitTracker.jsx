@@ -22,10 +22,10 @@ export default function HabitTracker() {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
           <FiAward className="text-amber-500" />
-          {t("habits.title", "Daily Habits")}
+          {t("habits.title", "Daily Habits & Streaks")}
         </h2>
         <span className="text-xs font-semibold px-2.5 py-1 bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-400 rounded-full border border-teal-200/50 dark:border-teal-800/40">
-          {habits.filter((h) => h.last_completed === today).length} / {habits.length} Done
+          {habits.filter((h) => h.last_completed === today).length} / {habits.length} {t("habits.doneCount", "Completed Today")}
         </span>
       </div>
 
@@ -40,7 +40,7 @@ export default function HabitTracker() {
         <button
           type="submit"
           disabled={!newHabit.trim()}
-          aria-label="Add habit"
+          aria-label={t("habits.addBtn", "Add habit")}
           className="p-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
         >
           <FiPlus size={18} />
@@ -69,7 +69,7 @@ export default function HabitTracker() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => toggleHabit(habit.id)}
-                    aria-label={`Mark ${habit.name} as ${isCompletedToday ? "incomplete" : "complete"}`}
+                    aria-label={`Mark ${habit.name}`}
                     className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${
                       isCompletedToday
                         ? "bg-teal-600 border-teal-600 text-white shadow-xs"
@@ -90,11 +90,11 @@ export default function HabitTracker() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-xs font-semibold px-2 py-1 bg-amber-100/80 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 rounded-md">
-                    🔥 {habit.streak}d
+                    🔥 {habit.streak} {t("habits.streakDays", "days")}
                   </span>
                   <button
                     onClick={() => removeHabit(habit.id)}
-                    aria-label={`Delete ${habit.name}`}
+                    aria-label={t("common.delete", "Delete")}
                     className="text-slate-400 hover:text-rose-500 transition-colors p-1"
                   >
                     <FiTrash2 size={16} />

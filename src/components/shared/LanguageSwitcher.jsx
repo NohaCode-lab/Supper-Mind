@@ -1,17 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FiGlobe, FiCheck, FiChevronDown } from "react-icons/fi";
+import { FiCheck, FiChevronDown } from "react-icons/fi";
 
 const LANGUAGES = [
   { code: "en", name: "English", flag: "🇬🇧" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "es", name: "Español", flag: "🇪🇸" },
   { code: "ar", name: "العربية", flag: "🇸🇦", dir: "rtl" },
 ];
 
 export default function LanguageSwitcher() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -20,11 +18,6 @@ export default function LanguageSwitcher() {
 
   const handleSelectLanguage = (lang) => {
     i18n.changeLanguage(lang.code);
-    if (lang.dir === "rtl") {
-      document.documentElement.dir = "rtl";
-    } else {
-      document.documentElement.dir = "ltr";
-    }
     setIsOpen(false);
   };
 
@@ -43,8 +36,8 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all border border-slate-200/70 dark:border-slate-800"
-        aria-label="Select language"
-        title="Select Language"
+        aria-label={t("navigation.switchLang", "Select language")}
+        title={t("navigation.switchLang", "Select language")}
       >
         <span className="text-sm">{currentLang.flag}</span>
         <span className="uppercase font-bold tracking-wider">{currentLang.code}</span>
@@ -52,9 +45,9 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 rtl:right-auto rtl:left-0 mt-2 w-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
           <div className="px-3 py-1.5 text-[10px] uppercase font-extrabold tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800">
-            Select Language
+            {t("settings.switchLang", "Select Language")}
           </div>
           {LANGUAGES.map((lang) => {
             const isSelected = currentLangCode === lang.code;

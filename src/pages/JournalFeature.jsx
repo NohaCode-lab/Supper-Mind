@@ -58,14 +58,14 @@ export default function JournalFeature() {
           {t("journal.title", "Daily Journal & Reflections")}
         </h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-          Unpack your thoughts, track your mental milestones, and build clarity.
+          {t("journal.subtitle", "Unpack your thoughts, track your mental milestones, and build clarity.")}
         </p>
       </header>
 
       {/* Entry Form */}
       <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
         <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">
-          Write New Entry
+          {t("journal.newEntryTitle", "Write New Entry")}
         </h2>
 
         <form onSubmit={handleAddEntry} className="space-y-4">
@@ -74,7 +74,7 @@ export default function JournalFeature() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Entry title..."
+              placeholder={t("journal.titlePlaceholder", "Entry title...")}
               className="md:col-span-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-sm transition-all"
             />
 
@@ -95,7 +95,7 @@ export default function JournalFeature() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={4}
-            placeholder="Express what is on your mind today..."
+            placeholder={t("journal.contentPlaceholder", "Express what is on your mind today...")}
             className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-sm transition-all resize-none"
           />
 
@@ -105,7 +105,7 @@ export default function JournalFeature() {
             className="bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all shadow-xs flex items-center gap-2"
           >
             <FiPlus />
-            Save Journal Entry
+            {t("journal.saveBtn", "Save Journal Entry")}
           </button>
         </form>
       </div>
@@ -114,13 +114,13 @@ export default function JournalFeature() {
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
           <FiCalendar className="text-teal-600 dark:text-teal-400" />
-          Past Entries
+          {t("journal.pastEntries", "Past Entries")}
         </h2>
 
         {entries.length === 0 ? (
           <div className="text-center py-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
             <p className="text-slate-500 dark:text-slate-400 text-sm">
-              No journal entries recorded yet. Start writing today!
+              {t("journal.empty", "No journal entries recorded yet. Start writing today!")}
             </p>
           </div>
         ) : (
@@ -144,7 +144,7 @@ export default function JournalFeature() {
                   </span>
                   <button
                     onClick={() => handleDelete(entry.id)}
-                    aria-label="Delete journal entry"
+                    aria-label={t("common.delete", "Delete")}
                     className="text-slate-400 hover:text-rose-500 transition-colors p-1"
                   >
                     <FiTrash2 size={16} />

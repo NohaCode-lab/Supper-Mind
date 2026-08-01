@@ -1,89 +1,82 @@
-import { useState, useEffect } from "react";
-import { FiWind, FiPlay, FiPause, FiRotateCcw } from "react-icons/fi";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function BreathingExercise() {
+  const { t } = useTranslation();
+  const [phase, setPhase] = useState("ready"); // ready, inhale, hold, exhale
   const [isActive, setIsActive] = useState(false);
-  const [phase, setPhase] = useState("Inhale"); // Inhale (4s), Hold (4s), Exhale (4s)
-  const [timer, setTimer] = useState(4);
 
   useEffect(() => {
-    let interval = null;
+    let timer;
     if (isActive) {
-      interval = setInterval(() => {
-        setTimer((prev) => {
-          if (prev > 1) return prev - 1;
-
-          // Transition phase
-          setPhase((currentPhase) => {
-            if (currentPhase === "Inhale") return "Hold";
-            if (currentPhase === "Hold") return "Exhale";
-            return "Inhale";
-          });
-          return 4;
-        });
-      }, 1000);
+      if (phase === "ready" || phase === "exhale") {
+        setPhase("inhale");
+        timer = setTimeout(() => setPhase("hold"), 4000);
+      } else if (phase === "inhale") {
+        timer = setTimeout(() => setPhase("hold"), 4000);
+      } else if (phase === "hold") {
+        timer = setTimeout(() => setPhase("exhale"), 4000);
+      }
     } else {
-      clearInterval(interval);
+      setPhase("ready");
     }
-    return () => clearInterval(interval);
-  }, [isActive]);
+    return () => clearTimeout(timer);
+  }, [isActive, phase]);
 
-  const reset = () => {
-    setIsActive(false);
-    setPhase("Inhale");
-    setTimer(4);
+  const getPhaseText = () => {
+    switch (phase) {
+      case "inhale":
+        return t("stress.inhale", "Inhale");
+      case "hold":
+        return t("stress.hold", "Hold");
+      case "exhale":
+        return t("stress.exhale", "Exhale");
+      default:
+        return t("stress.ready", "Ready");
+    }
+  };
+
+  const getCircleScale = () => {
+    switch (phase) {
+      case "inhale":
+        return 1.4;
+      case "hold":
+        return 1.4;
+      case "exhale":
+        return 1.0;
+      default:
+        return 1.0;
+    }
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col items-center text-center">
-      <div className="flex items-center gap-2 mb-4 text-teal-600 dark:text-teal-400 font-semibold text-lg">
-        <FiWind size={22} />
-        <span>Box Breathing Guide</span>
-      </div>
-
-      <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
-        Reduce anxiety instantly by matching your breath with the calm rhythm.
+    <div className="flex flex-col items-center justify-center p-8 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 text-center">
+      <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-1">
+        {t("stress.breathingTitle", "Box Breathing Guide")}
+      </h3>
+      <p className="text-xs text-slate-500 dark:text-slate-400 mb-8 max-w-sm">
+        {t("stress.breathingSubtitle", "Reduce anxiety instantly by matching your breath with the calm rhythm.")}
       </p>
 
       {/* Circle Animation */}
-      <div className="relative w-36 h-36 flex items-center justify-center mb-6">
-        <div
-          className={`absolute inset-0 rounded-full border-4 transition-all duration-1000 ease-in-out ${
-            phase === "Inhale"
-              ? "scale-110 border-teal-500 bg-teal-500/10"
-              : phase === "Hold"
-              ? "scale-110 border-amber-500 bg-amber-500/10"
-              : "scale-90 border-slate-400 bg-slate-500/10"
-          }`}
+      <div className="relative w-44 h-44 flex items-center justify-center mb-8">
+        <motion.div
+          animate={{ scale: getCircleScale() }}
+          transition={{ duration: 4, ease: "easeInOut" }}
+          className="absolute inset-0 rounded-full bg-teal-500/20 border-2 border-teal-500/50"
         />
-        <div className="z-10 flex flex-col items-center">
-          <span className="text-xs uppercase tracking-widest text-slate-400 font-bold">
-            {isActive ? phase : "Ready"}
-          </span>
-          <span className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">
-            {timer}s
-          </span>
+        <div className="z-10 font-bold text-lg text-teal-700 dark:text-teal-400 uppercase tracking-widest">
+          {getPhaseText()}
         </div>
       </div>
 
-      {/* Control Buttons */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => setIsActive(!isActive)}
-          className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium text-sm transition-all flex items-center gap-2 shadow-xs"
-        >
-          {isActive ? <FiPause /> : <FiPlay />}
-          <span>{isActive ? "Pause" : "Start Exercise"}</span>
-        </button>
-
-        <button
-          onClick={reset}
-          aria-label="Reset exercise"
-          className="p-2.5 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
-        >
-          <FiRotateCcw size={16} />
-        </button>
-      </div>
+      <button
+        onClick={() => setIsActive(!isActive)}
+        className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium text-sm transition-all shadow-xs"
+      >
+        {isActive ? t("stress.pause", "Pause") : t("stress.start", "Start Exercise")}
+      </button>
     </div>
   );
 }

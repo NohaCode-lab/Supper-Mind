@@ -9,7 +9,7 @@ import Input from "../components/ui/Input";
 import Card from "../components/ui/Card";
 
 export default function Settings() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isDarkMode, toggleTheme, primaryGoal, setPrimaryGoal, aiTone, setAiTone, setOnboardingComplete } = useAppStore();
   const { currentUser, setUser } = useAuthStore();
 
@@ -42,7 +42,6 @@ export default function Settings() {
       return;
     }
 
-    // Save profile updates
     setUser({
       ...currentUser,
       email,
@@ -55,40 +54,35 @@ export default function Settings() {
     setTimeout(() => setIsSaved(false), 3000);
   };
 
-  const toggleLanguage = () => {
-    const nextLang = i18n.language?.startsWith("en") ? "de" : "en";
-    i18n.changeLanguage(nextLang);
-  };
-
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
       <header>
         <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3">
           <FiUser className="text-teal-600 dark:text-teal-400" />
-          Account & SaaS Settings
+          {t("settings.title", "Account & SaaS Settings")}
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Manage your personal profile, AI coach preferences, and application settings.
+          {t("settings.subtitle", "Manage your personal profile, AI coach preferences, and application settings.")}
         </p>
       </header>
 
       {/* Profile Form */}
       <Card>
         <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
-          <FiUser className="text-teal-500" /> User Profile Information
+          <FiUser className="text-teal-500" /> {t("settings.profileTitle", "User Profile Information")}
         </h2>
 
         <form onSubmit={handleSaveProfile} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
-              label="Full Name"
+              label={t("settings.fullName", "Full Name")}
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               error={errors.fullName}
               placeholder="Your Full Name"
             />
             <Input
-              label="Email Address"
+              label={t("settings.email", "Email Address")}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -100,7 +94,7 @@ export default function Settings() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                Primary Wellness Goal
+                {t("settings.primaryGoal", "Primary Wellness Goal")}
               </label>
               <select
                 value={goal}
@@ -116,7 +110,7 @@ export default function Settings() {
 
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                AI Coach Persona Tone
+                {t("settings.aiTone", "AI Coach Persona Tone")}
               </label>
               <select
                 value={tone}
@@ -131,10 +125,10 @@ export default function Settings() {
           </div>
 
           <div className="flex items-center gap-4 pt-4">
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit">{t("settings.saveBtn", "Save Changes")}</Button>
             {isSaved && (
               <span className="text-xs font-semibold text-teal-600 dark:text-teal-400 flex items-center gap-1">
-                <FiCheck /> Settings saved successfully!
+                <FiCheck /> {t("settings.savedSuccess", "Settings saved successfully!")}
               </span>
             )}
           </div>
@@ -145,26 +139,28 @@ export default function Settings() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-            <FiMoon className="text-amber-500" /> Interface & Theme
+            <FiMoon className="text-amber-500" /> {t("settings.themeTitle", "Interface & Theme")}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-            Switch between light and dark modes according to your preference.
+            {t("settings.themeDesc", "Switch between light and dark modes according to your preference.")}
           </p>
           <Button variant="outline" onClick={toggleTheme} className="w-full">
-            Toggle {isDarkMode ? "Light Mode ☀️" : "Dark Mode 🌙"}
+            {t("settings.toggleTheme", "Toggle")} {isDarkMode ? t("settings.lightMode", "Light Mode ☀️") : t("settings.darkMode", "Dark Mode 🌙")}
           </Button>
         </Card>
 
         <Card>
           <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-            <FiGlobe className="text-teal-500" /> Language & Regional
+            <FiGlobe className="text-teal-500" /> {t("settings.langTitle", "Language & Regional")}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-            Active Language: <strong className="uppercase">{i18n.language || "EN"}</strong>
+            {t("settings.langDesc", "Active Language:")} <strong className="uppercase">{i18n.language || "EN"}</strong>
           </p>
-          <Button variant="outline" onClick={toggleLanguage} className="w-full">
-            Switch Language (EN / DE)
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => i18n.changeLanguage("en")} className="flex-1 text-xs">🇬🇧 EN</Button>
+            <Button variant="outline" onClick={() => i18n.changeLanguage("de")} className="flex-1 text-xs">🇩🇪 DE</Button>
+            <Button variant="outline" onClick={() => i18n.changeLanguage("ar")} className="flex-1 text-xs">🇸🇦 AR</Button>
+          </div>
         </Card>
       </div>
 
@@ -173,14 +169,14 @@ export default function Settings() {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2 text-sm">
-              <FiRefreshCw className="text-teal-500" /> Re-run Setup Wizard
+              <FiRefreshCw className="text-teal-500" /> {t("settings.onboardingResetTitle", "Re-run Setup Wizard")}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Want to re-select your initial goals or starter habits?
+              {t("settings.onboardingResetDesc", "Want to re-select your initial goals or starter habits?")}
             </p>
           </div>
           <Button variant="secondary" size="sm" onClick={() => setOnboardingComplete(false)}>
-            Launch Wizard
+            {t("settings.launchWizard", "Launch Wizard")}
           </Button>
         </div>
       </Card>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { registerSchema } from "../utils/validators";
@@ -7,6 +8,7 @@ import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 
 export default function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
@@ -57,15 +59,17 @@ export default function Register() {
           <div className="w-12 h-12 rounded-2xl bg-teal-600 flex items-center justify-center text-white mx-auto shadow-md">
             <FiHeart size={24} />
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Create Account</h1>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+            {t("auth.registerTitle", "Create Account")}
+          </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Start your personalized wellness journey today.
+            {t("auth.registerSubtitle", "Start your personalized wellness journey today.")}
           </p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <Input
-            label="Full Name"
+            label={t("auth.fullName", "Full Name")}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             error={errors.fullName}
@@ -73,7 +77,7 @@ export default function Register() {
           />
 
           <Input
-            label="Email Address"
+            label={t("auth.email", "Email Address")}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -82,7 +86,7 @@ export default function Register() {
           />
 
           <Input
-            label="Password"
+            label={t("auth.password", "Password")}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -91,7 +95,7 @@ export default function Register() {
           />
 
           <Input
-            label="Confirm Password"
+            label={t("auth.confirmPassword", "Confirm Password")}
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -100,14 +104,14 @@ export default function Register() {
           />
 
           <Button type="submit" isLoading={isLoading} className="w-full">
-            Create Free Account
+            {t("auth.createBtn", "Create Free Account")}
           </Button>
         </form>
 
         <p className="text-xs text-center text-slate-500 dark:text-slate-400">
-          Already registered?{" "}
+          {t("auth.haveAccount", "Already registered?")}{" "}
           <Link to="/login" className="text-teal-600 dark:text-teal-400 font-semibold hover:underline">
-            Sign in here
+            {t("auth.signInLink", "Sign in here")}
           </Link>
         </p>
       </div>
