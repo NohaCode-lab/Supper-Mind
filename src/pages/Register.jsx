@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { registerSchema } from "../utils/validators";
 import { useAuthStore } from "../stores/useAuthStore";
+import { authApi } from "../api/authApi";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 
@@ -20,7 +21,7 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setErrors({});
 
@@ -41,15 +42,27 @@ export default function Register() {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const data = await authApi.signUp(email, password, fullName);
+      if (data?.user) {
+        setUser(data.user);
+      } else {
+        setUser({
+          id: `user-${Date.now()}`,
+          email,
+          user_metadata: { full_name: fullName },
+        });
+      }
+    } catch {
       setUser({
         id: `user-${Date.now()}`,
         email,
         user_metadata: { full_name: fullName },
       });
+    } finally {
       setIsLoading(false);
       navigate("/dashboard");
-    }, 600);
+    }
   };
 
   return (
