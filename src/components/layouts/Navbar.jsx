@@ -64,22 +64,22 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             {currentUser ? (
               <>
-                <div className="hidden sm:flex flex-col items-end rtl:items-start">
-                  <span className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-tight">
+                <div className="hidden sm:flex flex-col items-end rtl:items-start whitespace-nowrap">
+                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight">
                     {currentUser?.user_metadata?.full_name || displayName}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 leading-tight">
+                  <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500 leading-tight">
                     {currentUser.email}
                   </span>
                 </div>
 
-                <div className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800 shadow-xs shrink-0">
+                <div className="w-8.5 h-8.5 rounded-full bg-teal-50 dark:bg-teal-950/60 flex items-center justify-center text-teal-600 dark:text-teal-400 border border-teal-200/60 dark:border-teal-800/60 shadow-xs shrink-0">
                   <FiUser size={16} />
                 </div>
 
                 <button
                   onClick={signOut}
-                  className="p-2 text-slate-400 hover:text-rose-500 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                  className="p-2 text-slate-400 hover:text-rose-500 transition-colors rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/30 active:scale-95"
                   aria-label={t("navigation.signOut", "Sign out")}
                   title={t("navigation.signOut", "Sign out")}
                 >
@@ -88,22 +88,22 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <div className="hidden sm:flex flex-col items-end rtl:items-start">
-                  <span className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-tight">
+                <div className="hidden sm:flex flex-col items-end rtl:items-start whitespace-nowrap">
+                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight">
                     {t("navigation.guest", "Guest")}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 leading-tight">
-                    {t("navigation.guestUser", "Guest User")}
+                  <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500 leading-tight">
+                    {t("navigation.guestUser", "Guest Account")}
                   </span>
                 </div>
 
-                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shadow-xs shrink-0">
+                <div className="w-8.5 h-8.5 rounded-full bg-slate-100 dark:bg-slate-800/80 flex items-center justify-center text-slate-400 dark:text-slate-400 border border-slate-200/80 dark:border-slate-700/80 shadow-xs shrink-0">
                   <FiUser size={16} />
                 </div>
 
                 <Link
                   to="/login"
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white rounded-xl text-xs font-semibold transition-all shadow-xs shrink-0"
                 >
                   <FiLogIn size={14} />
                   <span>{t("auth.signInBtn", "Sign In")}</span>
