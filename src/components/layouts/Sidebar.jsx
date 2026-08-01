@@ -5,6 +5,7 @@ import {
   FiMessageSquare,
   FiCheckSquare,
   FiBookOpen,
+  FiSmile,
   FiWind,
   FiSettings,
   FiX,
@@ -21,6 +22,7 @@ export default function Sidebar() {
     { path: "/chat", label: t("navigation.chat", "AI Companion"), icon: FiMessageSquare },
     { path: "/habits", label: t("navigation.habits", "Habits Tracker"), icon: FiCheckSquare },
     { path: "/journal", label: t("navigation.journal", "Daily Journal"), icon: FiBookOpen },
+    { path: "/mood", label: t("navigation.mood", "Mood Analytics"), icon: FiSmile },
     { path: "/stress", label: t("navigation.stress", "Stress Check-in"), icon: FiWind },
     { path: "/settings", label: t("navigation.settings", "Settings"), icon: FiSettings },
   ];
@@ -41,7 +43,7 @@ export default function Sidebar() {
         className={`fixed md:static inset-y-0 left-0 rtl:left-auto rtl:right-0 z-50 w-64 bg-white dark:bg-slate-900 border-r rtl:border-r-0 rtl:border-l border-slate-200 dark:border-slate-800 flex flex-col justify-between transition-transform duration-300 transform shrink-0 ${
           isMobileMenuOpen
             ? "translate-x-0"
-            : "-translate-x-full rtl:translate-x-full md:translate-x-0 md:rtl:translate-x-0"
+            : "max-md:-translate-x-full max-md:rtl:translate-x-full md:translate-x-0"
         }`}
       >
         <div>
