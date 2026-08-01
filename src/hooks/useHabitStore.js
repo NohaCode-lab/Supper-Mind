@@ -10,6 +10,7 @@ export function useHabitStore() {
   const { data: habits = [], isLoading } = useQuery({
     queryKey: ["habits", currentUser?.id],
     queryFn: async () => {
+      if (!currentUser?.id) return [];
       const { data, error } = await supabase
         .from("habits")
         .select("*")
@@ -19,7 +20,7 @@ export function useHabitStore() {
       if (error) throw new Error(error.message);
       return data;
     },
-    enabled: !!currentUser,
+    enabled: Boolean(currentUser?.id),
   });
 
   // إضافة عادة جديدة

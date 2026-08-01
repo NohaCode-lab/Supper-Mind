@@ -23,10 +23,12 @@ export const useAuthStore = create(
       name: "supper-mind-auth-storage",
       onRehydrateStorage: () => (state) => {
         if (
+          !state?.currentUser?.id ||
+          !state?.currentUser?.email ||
           state?.currentUser?.id === "guest-user-123" ||
           state?.currentUser?.email === "guest@suppermind.com"
         ) {
-          state.setUser(null);
+          state?.setUser?.(null);
         }
       },
     }

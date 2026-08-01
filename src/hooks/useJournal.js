@@ -11,6 +11,7 @@ export function useJournal() {
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ["journals", currentUser?.id],
     queryFn: async () => {
+      if (!currentUser?.id) return [];
       const { data, error } = await supabase
         .from("journals")
         .select("*")
@@ -20,7 +21,7 @@ export function useJournal() {
       if (error) throw new Error(error.message);
       return data;
     },
-    enabled: !!currentUser,
+    enabled: Boolean(currentUser?.id),
   });
 
   // إضافة يومية جديدة
