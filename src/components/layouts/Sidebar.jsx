@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
+  FiHome,
   FiGrid,
   FiMessageSquare,
   FiCheckSquare,
@@ -12,12 +13,23 @@ import {
   FiHeart,
 } from "react-icons/fi";
 import { useAppStore } from "../../stores/useAppStore";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Sidebar() {
   const { t } = useTranslation();
   const { isMobileMenuOpen, closeMobileMenu } = useAppStore();
+  const { currentUser } = useAuth();
+
+  const isAuthenticated = Boolean(
+    currentUser &&
+    currentUser.id &&
+    currentUser.email &&
+    currentUser.id !== "guest-user-123" &&
+    currentUser.email !== "guest@suppermind.com"
+  );
 
   const navItems = [
+    { path: "/", label: t("navigation.home", "Home"), icon: FiHome, end: true },
     { path: "/dashboard", label: t("navigation.dashboard", "Dashboard"), icon: FiGrid },
     { path: "/chat", label: t("navigation.chat", "AI Companion"), icon: FiMessageSquare },
     { path: "/habits", label: t("navigation.habits", "Habits Tracker"), icon: FiCheckSquare },
@@ -50,7 +62,7 @@ export default function Sidebar() {
           {/* Logo Header */}
           <div className="h-16 px-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <NavLink
-              to="/dashboard"
+              to={isAuthenticated ? "/dashboard" : "/"}
               onClick={closeMobileMenu}
               className="flex items-center gap-2 font-bold text-xl text-slate-800 dark:text-slate-100"
             >
@@ -79,11 +91,12 @@ export default function Sidebar() {
                 <NavLink
                   key={item.path}
                   to={item.path}
+                  end={item.end}
                   onClick={closeMobileMenu}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all ${
                       isActive
-                        ? "bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-400 border border-teal-200/60 dark:border-teal-800/40 shadow-xs"
+                        ? "bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-400 border border-teal-200/60 dark:border-teal-800/40 shadow-xs font-semibold"
                         : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200"
                     }`
                   }
