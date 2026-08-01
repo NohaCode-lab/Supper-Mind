@@ -5,13 +5,7 @@ import { supabase } from "../services/supabase";
 export const useAuthStore = create(
   persist(
     (set) => ({
-      currentUser: {
-        id: "guest-user-123",
-        email: "guest@suppermind.com",
-        user_metadata: {
-          full_name: "Guest User",
-        },
-      },
+      currentUser: null,
       isAuthLoading: false,
 
       setUser: (user) => set({ currentUser: user }),
@@ -22,13 +16,7 @@ export const useAuthStore = create(
         } catch {
           // Ignore network errors in demo mode
         }
-        set({
-          currentUser: {
-            id: "guest-user-123",
-            email: "guest@suppermind.com",
-            user_metadata: { full_name: "Guest User" },
-          },
-        });
+        set({ currentUser: null });
       },
     }),
     {

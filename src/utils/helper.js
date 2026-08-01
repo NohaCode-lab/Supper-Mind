@@ -18,15 +18,19 @@ export const formatRelativeTime = (dateString) => {
   return `${Math.floor(diffInSeconds / 86400)}d ago`;
 };
 
-export const getUserDisplayName = (currentUser) => {
-  if (!currentUser) return "Guest";
-  const name =
+export const getUserDisplayName = (currentUser, t) => {
+  const guestLabel = t ? t("navigation.guest", "Guest") : "Guest";
+  if (!currentUser) return guestLabel;
+
+  const rawName =
     currentUser?.user_metadata?.full_name ||
+    currentUser?.user_metadata?.name ||
     currentUser?.full_name ||
     currentUser?.name ||
+    currentUser?.username ||
     (currentUser?.email ? currentUser.email.split("@")[0] : "");
 
-  if (!name) return "User";
-  const firstName = name.split(" ")[0];
+  if (!rawName) return guestLabel;
+  const firstName = rawName.trim().split(" ")[0];
   return firstName.charAt(0).toUpperCase() + firstName.slice(1);
 };
