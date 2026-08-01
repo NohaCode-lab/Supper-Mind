@@ -66,10 +66,10 @@ export default function Navbar() {
               <>
                 <div className="hidden sm:flex flex-col items-end rtl:items-start whitespace-nowrap">
                   <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight">
-                    {currentUser?.user_metadata?.full_name || displayName}
+                    {displayName}
                   </span>
                   <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500 leading-tight">
-                    {currentUser.email}
+                    {t("navigation.userGreeting", "Welcome back")}
                   </span>
                 </div>
 
