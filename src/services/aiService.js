@@ -3,6 +3,7 @@ import { useHabitStore } from "../stores/useHabitStore";
 import { useAppStore } from "../stores/useAppStore";
 import { useAuthStore } from "../stores/useAuthStore";
 import { getUserDisplayName } from "../utils/helper";
+import i18n from "../i18n";
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -72,17 +73,17 @@ Guidelines:
   return EMPATHY_RESPONSES[randomIndex];
 };
 
-export const getAIInsight = (level) => {
-  switch (level) {
-    case "Low 😌":
-      return "Great! Your stress level is low. Keep maintaining your routine 🌿";
-    case "Medium 😐":
-      return "You're slightly stressed. Consider a short break or walk 🚶‍♂️";
-    case "High 😰":
-      return "High stress detected. Try breathing exercises or disconnect for a while 🧘‍♂️";
-    case "Extreme 😵":
-      return "Critical stress level. Please rest immediately and avoid pressure ⚠️";
+export const getAIInsight = (levelKey) => {
+  switch (levelKey) {
+    case "levelLow":
+      return i18n.t("stress.insightLow", "Great! Your stress level is low. Keep maintaining your routine 🌿");
+    case "levelMedium":
+      return i18n.t("stress.insightMedium", "You are slightly stressed. Consider a short break or walk 🚶‍♂️");
+    case "levelHigh":
+      return i18n.t("stress.insightHigh", "High stress detected. Try breathing exercises or disconnect for a while 🧘‍♂️");
+    case "levelExtreme":
+      return i18n.t("stress.insightExtreme", "Critical stress level. Please rest immediately and avoid pressure ⚠️");
     default:
-      return "Log your mood and stress levels to unlock personalized AI wellness insights.";
+      return i18n.t("stress.insightDefault", "Log your stress level to unlock personalized AI wellness insights.");
   }
 };
