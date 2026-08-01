@@ -31,7 +31,7 @@ This release resolves static user display defects in the primary navigation bar 
 ## Verification & Testing
 - **Automated Tests:** `12/12` tests passed (`npm run test`).
 - **Production Build:** Vite 5 production bundle compiled successfully with zero errors in 3.97s (`npm run build`).
-- **Version Control:** Commit `2edfc91` (`fix: update navbar user badge secondary label to localized greeting and guest account translations`).
+- **Version Control:** Commit `b74a0b5` (`fix: eliminate mixed guest/authenticated greeting state and safeguard query hooks against null user access`).
 
 ---
 
