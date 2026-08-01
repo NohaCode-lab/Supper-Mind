@@ -1,110 +1,163 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FiEdit3, FiSave, FiBookOpen, FiCalendar, FiTrash2 } from "react-icons/fi";
-import { useJournal } from "../hooks/useJournal";
+import { FiBookOpen, FiPlus, FiTrash2, FiCalendar, FiSmile } from "react-icons/fi";
+import { formatRelativeTime } from "../utils/helper";
+
+const INITIAL_ENTRIES = [
+  {
+    id: "j-1",
+    title: "Reflecting on Progress",
+    content:
+      "Today was a really grounding day. Focused on completing my core tasks early and spent 20 minutes meditating in the evening.",
+    mood: "Good",
+    created_at: new Date(Date.now() - 3600 * 1000 * 5).toISOString(),
+  },
+  {
+    id: "j-2",
+    title: "Overcoming Mid-Week Stress",
+    content:
+      "Felt a bit overwhelmed during the morning standup, but taking a short walk and using the box breathing feature helped reset my mind.",
+    mood: "Meh",
+    created_at: new Date(Date.now() - 3600 * 1000 * 29).toISOString(),
+  },
+];
 
 export default function JournalFeature() {
   const { t } = useTranslation();
-  const [entryText, setEntryText] = useState("");
-  const { entries, addEntry, isAdding, deleteEntry } = useJournal();
+  const [entries, setEntries] = useState(INITIAL_ENTRIES);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [mood, setMood] = useState("Good");
 
-  const handleSave = (e) => {
+  const handleAddEntry = (e) => {
     e.preventDefault();
-    if (!entryText.trim()) return;
+    if (!title.trim() || !content.trim()) return;
 
-    addEntry(entryText, {
-      onSuccess: () => setEntryText(""),
-    });
+    const newEntry = {
+      id: `journal-${Date.now()}`,
+      title: title.trim(),
+      content: content.trim(),
+      mood,
+      created_at: new Date().toISOString(),
+    };
+
+    setEntries([newEntry, ...entries]);
+    setTitle("");
+    setContent("");
   };
 
   const handleDelete = (id) => {
-    if (window.confirm(t("journal.confirm_delete", "Are you sure you want to delete this entry?"))) {
-      deleteEntry(id);
-    }
-  };
-
-  // تنسيق التاريخ بشكل جميل
-  const formatDate = (isoString) => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(isoString).toLocaleDateString(undefined, options);
+    setEntries(entries.filter((entry) => entry.id !== id));
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
-      {/* ترويسة الصفحة */}
       <header>
         <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3">
           <FiBookOpen className="text-teal-600 dark:text-teal-400" />
-          {t("journal.title", "My Journal")}
+          {t("journal.title", "Daily Journal & Reflections")}
         </h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-2">
-          {t("journal.subtitle", "Write down your thoughts, feelings, and reflections.")}
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+          Unpack your thoughts, track your mental milestones, and build clarity.
         </p>
       </header>
 
-      {/* قسم كتابة يومية جديدة */}
-      <section className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all focus-within:ring-1 focus-within:ring-teal-500/30">
-        <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-100 flex items-center gap-2">
-          <FiEdit3 className="text-teal-600 dark:text-teal-400" />
-          {t("journal.new_entry", "New Entry")}
+      {/* Entry Form */}
+      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
+        <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">
+          Write New Entry
         </h2>
-        <form onSubmit={handleSave} className="space-y-4">
-          <textarea
-            value={entryText}
-            onChange={(e) => setEntryText(e.target.value)}
-            placeholder={t("journal.placeholder", "What's on your mind today?")}
-            className="w-full min-h-[150px] p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all resize-y placeholder:text-slate-400"
-          />
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={!entryText.trim() || isAdding}
-              className="flex items-center gap-2 px-6 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white font-medium rounded-xl transition-colors shadow-sm"
-            >
-              <FiSave size={18} />
-              {isAdding ? t("journal.saving", "Saving...") : t("journal.save", "Save Entry")}
-            </button>
-          </div>
-        </form>
-      </section>
 
-      {/* قسم سجل اليوميات السابقة */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 px-2">
-          {t("journal.history", "Past Entries")}
+        <form onSubmit={handleAddEntry} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Entry title..."
+              className="md:col-span-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-sm transition-all"
+            />
+
+            <select
+              value={mood}
+              onChange={(e) => setMood(e.target.value)}
+              className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-sm transition-all"
+            >
+              <option value="Rad">🤩 Rad</option>
+              <option value="Good">🙂 Good</option>
+              <option value="Meh">😐 Meh</option>
+              <option value="Bad">😞 Bad</option>
+              <option value="Awful">😭 Awful</option>
+            </select>
+          </div>
+
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={4}
+            placeholder="Express what is on your mind today..."
+            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-sm transition-all resize-none"
+          />
+
+          <button
+            type="submit"
+            disabled={!title.trim() || !content.trim()}
+            className="bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all shadow-xs flex items-center gap-2"
+          >
+            <FiPlus />
+            Save Journal Entry
+          </button>
+        </form>
+      </div>
+
+      {/* Entries List */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <FiCalendar className="text-teal-600 dark:text-teal-400" />
+          Past Entries
         </h2>
-        
+
         {entries.length === 0 ? (
-          <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 border-dashed">
-            <p className="text-slate-500 dark:text-slate-400">
-              {t("journal.empty", "Your journal is empty. Start writing your first entry above.")}
+          <div className="text-center py-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
+            <p className="text-slate-500 dark:text-slate-400 text-sm">
+              No journal entries recorded yet. Start writing today!
             </p>
           </div>
         ) : (
-          <div className="grid gap-4">
-            {entries.map(entry => (
-              <div key={entry.id} className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:shadow-md group">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">
-                    <FiCalendar size={14} className="text-teal-600 dark:text-teal-400" />
-                  <span>{formatDate(entry.created_at)}</span>
-                  </div>
-                  <button 
+          entries.map((entry) => (
+            <div
+              key={entry.id}
+              className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs transition-shadow hover:shadow-md"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100">
+                    {entry.title}
+                  </h3>
+                  <span className="text-xs px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full flex items-center gap-1 font-medium">
+                    <FiSmile /> {entry.mood}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-slate-400">
+                    {formatRelativeTime(entry.created_at)}
+                  </span>
+                  <button
                     onClick={() => handleDelete(entry.id)}
-                    className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 opacity-0 group-hover:opacity-100"
-                    title={t("journal.delete", "Delete entry")}
+                    aria-label="Delete journal entry"
+                    className="text-slate-400 hover:text-rose-500 transition-colors p-1"
                   >
                     <FiTrash2 size={16} />
                   </button>
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed text-base">
-                  {entry.text}
-                </p>
               </div>
-            ))}
-          </div>
+              <p className="text-slate-600 dark:text-slate-300 text-sm whitespace-pre-wrap leading-relaxed">
+                {entry.content}
+              </p>
+            </div>
+          ))
         )}
-      </section>
+      </div>
     </div>
   );
 }

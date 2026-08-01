@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FiCheck, FiPlus, FiTrash2, FiAward } from "react-icons/fi";
-import { useHabitStore } from "../stores/useHabitStore";
+import { useHabitStore } from "../../stores/useHabitStore";
 
 export default function HabitTracker() {
   const { t } = useTranslation();
@@ -18,18 +18,18 @@ export default function HabitTracker() {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
           <FiAward className="text-amber-500" />
-          {t("habits.title", "Daily Habits & Streaks")}
+          {t("habits.title", "Daily Habits")}
         </h2>
-        <span className="text-xs font-semibold px-3 py-1 bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-400 rounded-full border border-teal-200/50 dark:border-teal-800/40">
-          {habits.filter((h) => h.last_completed === today).length} / {habits.length} Completed Today
+        <span className="text-xs font-semibold px-2.5 py-1 bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-400 rounded-full border border-teal-200/50 dark:border-teal-800/40">
+          {habits.filter((h) => h.last_completed === today).length} / {habits.length} Done
         </span>
       </div>
 
-      <form onSubmit={handleAdd} className="flex gap-2">
+      <form onSubmit={handleAdd} className="flex gap-2 mb-6">
         <input
           type="text"
           value={newHabit}
@@ -47,7 +47,7 @@ export default function HabitTracker() {
         </button>
       </form>
 
-      <div className="space-y-3">
+      <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
         {habits.length === 0 ? (
           <div className="text-center py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
             <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -60,7 +60,7 @@ export default function HabitTracker() {
             return (
               <div
                 key={habit.id}
-                className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
+                className={`flex items-center justify-between p-3.5 rounded-xl border transition-all ${
                   isCompletedToday
                     ? "bg-teal-50/60 dark:bg-teal-900/15 border-teal-200/70 dark:border-teal-900/40"
                     : "bg-slate-50 dark:bg-slate-800/40 border-slate-200/70 dark:border-slate-800"
@@ -89,8 +89,8 @@ export default function HabitTracker() {
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold px-2.5 py-1 bg-amber-100/80 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 rounded-md">
-                    🔥 {habit.streak} days
+                  <span className="text-xs font-semibold px-2 py-1 bg-amber-100/80 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 rounded-md">
+                    🔥 {habit.streak}d
                   </span>
                   <button
                     onClick={() => removeHabit(habit.id)}

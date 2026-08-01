@@ -1,12 +1,12 @@
+import React from "react";
 
-function Card({ children, className = "" }) {
+export default function Card({ children, className = "", ...props }) {
   return (
     <div
-      className={`bg-white/5 border border-white/10 rounded-xl p-4 shadow-md ${className}`}
+      className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow duration-300 ${className}`}
+      {...props}
     >
       {children}
     </div>
   );
 }
-
-export default Card;

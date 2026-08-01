@@ -1,44 +1,39 @@
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-
-// Route Guards
 import ProtectedRoute from "./ProtectedRoute";
 
-// Lazy-loaded Pages for aggressive code-splitting
 const Home = lazy(() => import("../pages/Home"));
 const Register = lazy(() => import("../pages/Register"));
-const Chat = lazy(() => import("../pages/Chat"));
+const Login = lazy(() => import("../pages/Login"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
-const Settings = lazy(() => import("../pages/Settings"));
+const Chat = lazy(() => import("../pages/Chat"));
+const HabitTracker = lazy(() => import("../pages/HabitTracker"));
 const JournalFeature = lazy(() => import("../pages/JournalFeature"));
+const MoodTracker = lazy(() => import("../pages/MoodTracker"));
+const StressCheckin = lazy(() => import("../pages/StressCheckin"));
+const Settings = lazy(() => import("../pages/Settings"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* ------------------------------------------------------------------
-          PUBLIC ROUTES
-          Accessible to anyone. No session required.
-          ------------------------------------------------------------------ */}
+      {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
 
-      {/* ------------------------------------------------------------------
-          PROTECTED ROUTES
-          Accessible ONLY to authenticated users. Unauthenticated traffic 
-          is automatically intercepted and redirected to /register.
-          ------------------------------------------------------------------ */}
+      {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/chat" element={<Chat />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/habits" element={<HabitTracker />} />
         <Route path="/journal" element={<JournalFeature />} />
+        <Route path="/mood" element={<MoodTracker />} />
+        <Route path="/stress" element={<StressCheckin />} />
+        <Route path="/settings" element={<Settings />} />
       </Route>
 
-      {/* ------------------------------------------------------------------
-          FALLBACK ROUTE
-          Catches all undefined URLs and renders the 404 page.
-          ------------------------------------------------------------------ */}
+      {/* Fallback Route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

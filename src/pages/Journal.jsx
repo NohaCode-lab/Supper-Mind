@@ -1,8 +1,5 @@
+import JournalFeature from "./JournalFeature";
 
-import JournalFeature from "../features/journal/Journal";
-
-function Journal() {
+export default function Journal() {
   return <JournalFeature />;
 }
-
-export default Journal;

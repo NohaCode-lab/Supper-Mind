@@ -1,112 +1,104 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FiHome, FiGrid, FiMessageSquare, FiSettings, FiX, FiActivity, FiBookOpen } from "react-icons/fi";
-import { useAuth } from "../../hooks/useAuth";
-import { useAppContext } from "../../context/AppContext";
+import {
+  FiGrid,
+  FiMessageSquare,
+  FiCheckSquare,
+  FiBookOpen,
+  FiWind,
+  FiSettings,
+  FiX,
+  FiHeart,
+} from "react-icons/fi";
+import { useAppStore } from "../../stores/useAppStore";
 
 export default function Sidebar() {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
-  
-  // جلب أدوات التحكم في القائمة الجانبية من السياق العام للتطبيق
-  const appContext = useAppContext() || {};
-  const isMobileMenuOpen = appContext.isMobileMenuOpen || false;
-  const toggleMobileMenu = appContext.toggleMobileMenu || (() => {});
+  const { isMobileMenuOpen, closeMobileMenu } = useAppStore();
 
-  // تعريف روابط التنقل مع تحديد هل هي عامة أم محمية
-  const navLinks = [
-    { 
-      path: "/", 
-      label: t("nav.home", "Home"), 
-      icon: <FiHome size={22} />, 
-      public: true 
-    },
-    { 
-      path: "/dashboard", 
-      label: t("nav.dashboard", "Dashboard"), 
-      icon: <FiGrid size={22} />, 
-      protected: true 
-    },
-    { 
-      path: "/chat", 
-      label: t("nav.chat", "AI Chat"), 
-      icon: <FiMessageSquare size={22} />, 
-      protected: true 
-    },
-    { 
-      path: "/settings", 
-      label: t("nav.settings", "Settings"), 
-      icon: <FiSettings size={22} />, 
-      protected: true 
-    },
-    { 
-      path: "/journal", 
-      label: t("nav.journal", "Journal"), 
-      icon: <FiBookOpen size={22} />, 
-      protected: true 
-    },
+  const navItems = [
+    { path: "/dashboard", label: t("nav.dashboard", "Dashboard"), icon: FiGrid },
+    { path: "/chat", label: t("nav.chat", "AI Companion"), icon: FiMessageSquare },
+    { path: "/habits", label: t("nav.habits", "Habits Tracker"), icon: FiCheckSquare },
+    { path: "/journal", label: t("nav.journal", "Daily Journal"), icon: FiBookOpen },
+    { path: "/stress", label: t("nav.stress", "Stress Check-in"), icon: FiWind },
+    { path: "/settings", label: t("nav.settings", "Settings"), icon: FiSettings },
   ];
-
-  // فلترة الروابط بناءً على حالة تسجيل الدخول
-  const filteredLinks = navLinks.filter(
-    (link) => link.public || (link.protected && isAuthenticated)
-  );
 
   return (
     <>
-      {/* خلفية معتمة للهواتف المحمولة عند فتح القائمة */}
+      {/* Mobile Backdrop */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-20 bg-slate-900/50 backdrop-blur-sm md:hidden"
-          onClick={toggleMobileMenu}
+          onClick={closeMobileMenu}
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 md:hidden"
+          aria-hidden="true"
         />
       )}
 
-      {/* الحاوية الرئيسية للشريط الجانبي */}
+      {/* Sidebar Container */}
       <aside
-        className={`fixed inset-y-0 start-0 z-30 flex h-full w-64 flex-col border-e border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between transition-transform duration-300 transform ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        {/* الشعار */}
-        <div className="flex h-16 shrink-0 items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
-          <span className="text-xl font-bold bg-linear-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">
-            Supper Mind
-          </span>
-          <button
-            onClick={toggleMobileMenu}
-            className="p-2 -mr-2 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 md:hidden"
-          >
-            <FiX size={20} />
-          </button>
+        <div>
+          {/* Logo Header */}
+          <div className="h-16 px-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <NavLink
+              to="/dashboard"
+              onClick={closeMobileMenu}
+              className="flex items-center gap-2 font-bold text-xl text-slate-800 dark:text-slate-100"
+            >
+              <div className="w-8 h-8 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-md">
+                <FiHeart size={18} />
+              </div>
+              <span>
+                Supper<span className="text-teal-600 dark:text-teal-400">Mind</span>
+              </span>
+            </NavLink>
+
+            <button
+              onClick={closeMobileMenu}
+              className="md:hidden p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg"
+              aria-label="Close menu"
+            >
+              <FiX size={20} />
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="p-4 space-y-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={closeMobileMenu}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all ${
+                      isActive
+                        ? "bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-400 border border-teal-200/60 dark:border-teal-800/40 shadow-xs"
+                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200"
+                    }`
+                  }
+                >
+                  <Icon size={18} />
+                  <span>{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </nav>
         </div>
 
-        {/* الروابط */}
-        <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-2">
-          {filteredLinks.map((link) => (
-            <NavLink
-              key={link.path}
-              to={link.path}
-              onClick={() => isMobileMenuOpen && toggleMobileMenu()}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-100"
-                }`
-              }
-            >
-              {link.icon}
-              <span>{link.label}</span>
-            </NavLink>
-          ))}
-        </nav>
-
-        {/* الجزء السفلي من القائمة */}
-        <div className="shrink-0 border-t border-slate-200 dark:border-slate-800 p-4">
-          <div className="flex items-center gap-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/50 px-4 py-3 text-sm text-slate-500 dark:text-slate-400">
-            <FiActivity size={20} className="text-teal-600 dark:text-teal-400" />
-            <span className="font-medium">{t("nav.wellness", "Mental Wellness")}</span>
+        {/* Footer Brand Info */}
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+          <div className="p-4 rounded-2xl bg-teal-50/50 dark:bg-slate-800/50 border border-teal-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
+            <p className="font-semibold text-slate-800 dark:text-slate-200 mb-1">
+              🌱 SaaS Wellness Platform
+            </p>
+            <p>Empowering mental clarity & healthy habits daily.</p>
           </div>
         </div>
       </aside>

@@ -1,6 +1,7 @@
 export const MOODS = [
   {
     value: "Rad",
+    score: 5,
     label: "Rad",
     icon: "🤩",
     bg: "bg-emerald-50 dark:bg-emerald-900/20",
@@ -10,6 +11,7 @@ export const MOODS = [
   },
   {
     value: "Good",
+    score: 4,
     label: "Good",
     icon: "🙂",
     bg: "bg-teal-50 dark:bg-teal-900/20",
@@ -19,6 +21,7 @@ export const MOODS = [
   },
   {
     value: "Meh",
+    score: 3,
     label: "Meh",
     icon: "😐",
     bg: "bg-slate-50 dark:bg-slate-900/20",
@@ -28,6 +31,7 @@ export const MOODS = [
   },
   {
     value: "Bad",
+    score: 2,
     label: "Bad",
     icon: "😞",
     bg: "bg-amber-50 dark:bg-amber-900/20",
@@ -37,6 +41,7 @@ export const MOODS = [
   },
   {
     value: "Awful",
+    score: 1,
     label: "Awful",
     icon: "😭",
     bg: "bg-rose-50 dark:bg-rose-900/20",
