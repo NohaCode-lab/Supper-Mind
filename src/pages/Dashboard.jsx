@@ -16,7 +16,7 @@ export default function Dashboard() {
   const { habits } = useHabitStore();
   const { moodHistory, isFetchingMoods, logMood, isLoggingMood } = useMood();
 
-  const displayName = getUserDisplayName(currentUser);
+  const displayName = getUserDisplayName(currentUser, t);
   const totalStreak = habits.reduce((sum, habit) => sum + habit.streak, 0);
 
   const [selectedMood, setSelectedMood] = useState(null);

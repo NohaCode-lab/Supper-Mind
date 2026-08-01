@@ -16,7 +16,11 @@ const EMPATHY_RESPONSES = [
 
 export const generateAIResponse = async (chatHistory) => {
   // Extract user context dynamically to make the AI assistant context-aware
-  const currentUser = useAuthStore.getState().currentUser;
+  const rawUser = useAuthStore.getState().currentUser;
+  const currentUser =
+    rawUser?.id === "guest-user-123" || rawUser?.email === "guest@suppermind.com"
+      ? null
+      : rawUser;
   const habits = useHabitStore.getState().habits || [];
   const { aiTone, primaryGoal } = useAppStore.getState();
 

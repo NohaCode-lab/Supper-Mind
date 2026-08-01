@@ -2,10 +2,15 @@ import { useAuthStore } from "../stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
 
 export function useAuth() {
-  const currentUser = useAuthStore((state) => state.currentUser);
+  const storeUser = useAuthStore((state) => state.currentUser);
   const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
   const storeSignOut = useAuthStore((state) => state.signOut);
   const navigate = useNavigate();
+
+  const currentUser =
+    storeUser?.id === "guest-user-123" || storeUser?.email === "guest@suppermind.com"
+      ? null
+      : storeUser;
 
   const signOut = async () => {
     await storeSignOut();
