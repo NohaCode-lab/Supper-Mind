@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { useHabitStore } from "../stores/useHabitStore";
 import { useAppStore } from "../stores/useAppStore";
 import { useAuthStore } from "../stores/useAuthStore";
+import { getUserDisplayName } from "../utils/helper";
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -18,7 +19,7 @@ export const generateAIResponse = async (chatHistory) => {
   const habits = useHabitStore.getState().habits || [];
   const { aiTone, primaryGoal } = useAppStore.getState();
 
-  const userName = currentUser?.user_metadata?.full_name?.split(" ")[0] || "Friend";
+  const userName = getUserDisplayName(currentUser);
   const activeHabitsCount = habits.length;
   const completedTodayCount = habits.filter(
     (h) => h.last_completed === new Date().toISOString().split("T")[0]

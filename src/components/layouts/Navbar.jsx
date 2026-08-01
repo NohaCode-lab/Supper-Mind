@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FiMenu, FiSun, FiMoon, FiLogOut, FiUser, FiZap } from "react-icons/fi";
 import { useAppStore } from "../../stores/useAppStore";
 import { useAuth } from "../../hooks/useAuth";
+import { getUserDisplayName } from "../../utils/helper";
 import PricingModal from "../../features/subscription/PricingModal";
 import LanguageSwitcher from "../shared/LanguageSwitcher";
 
@@ -11,6 +12,8 @@ export default function Navbar() {
   const { isDarkMode, toggleTheme, toggleMobileMenu } = useAppStore();
   const { currentUser, signOut } = useAuth();
   const [isPricingOpen, setIsPricingOpen] = useState(false);
+
+  const displayName = getUserDisplayName(currentUser);
 
   return (
     <>
@@ -28,7 +31,7 @@ export default function Navbar() {
           <h2 className="hidden md:block text-lg font-semibold text-slate-800 dark:text-slate-100">
             {t("nav.greeting", "Welcome back")},{" "}
             <span className="text-teal-600 dark:text-teal-400">
-              {currentUser?.user_metadata?.full_name?.split(" ")[0] || "Friend"}
+              {displayName}
             </span>
           </h2>
         </div>
@@ -62,7 +65,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex flex-col items-end">
               <span className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-tight">
-                {currentUser?.user_metadata?.full_name || "Guest User"}
+                {currentUser?.user_metadata?.full_name || currentUser?.full_name || displayName}
               </span>
               <span className="text-xs text-slate-500 dark:text-slate-400 leading-tight">
                 {currentUser?.email || "guest@suppermind.com"}

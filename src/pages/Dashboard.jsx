@@ -6,7 +6,7 @@ import { useHabitStore } from "../stores/useHabitStore";
 import { useAuth } from "../hooks/useAuth";
 import { useMood } from "../hooks/useMood";
 import { useAppStore } from "../stores/useAppStore";
-import { formatRelativeTime } from "../utils/helper";
+import { formatRelativeTime, getUserDisplayName } from "../utils/helper";
 import { MOODS } from "../services/moodService";
 
 export default function Dashboard() {
@@ -16,6 +16,7 @@ export default function Dashboard() {
   const { habits } = useHabitStore();
   const { moodHistory, isFetchingMoods, logMood, isLoggingMood } = useMood();
 
+  const displayName = getUserDisplayName(currentUser);
   const totalStreak = habits.reduce((sum, habit) => sum + habit.streak, 0);
 
   const [selectedMood, setSelectedMood] = useState(null);
@@ -45,7 +46,7 @@ export default function Dashboard() {
       <header>
         <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
           {t("dashboard.greeting", "Hello")},{" "}
-          {currentUser?.user_metadata?.full_name?.split(" ")[0] || "Friend"} 👋
+          <span className="text-teal-600 dark:text-teal-400">{displayName}</span> 👋
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Welcome back to your calm digital space. Here is your wellness snapshot.
