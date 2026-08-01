@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة العافية",
+    "chat": "مساعد الذكاء الاصطناعي",
+    "greeting": "مرحباً بعودتك",
+    "guest": "ضيف",
+    "toggle_language": "تغيير اللغة",
+    "toggle_theme": "تغيير المظهر",
+    "logout": "تسجيل الخروج"
+  },
+  "dashboard": {
+    "greeting": "أهلاً",
+    "guest": "صديقي",
+    "subtitle": "إليك ملخص رحلتك في الصحة النفسية.",
+    "stat_streak": "سلسلة العادات",
+    "stat_days": "أيام",
+    "stat_sessions": "جلسات الذكاء الاصطناعي",
+    "stat_moods": "تسجيلات المزاج",
+    "log_title": "كيف تشعر اليوم؟",
+    "save_entry": "حفظ السجل",
+    "history_title": "السجل الحديث",
+    "empty_state": "لا توجد تسجيلات بعد."
+  }
+}

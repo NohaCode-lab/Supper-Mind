@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "dashboard": "Tableau de Bord",
+    "chat": "Compagnon IA",
+    "greeting": "Bon retour",
+    "guest": "Invité",
+    "toggle_language": "Changer de langue",
+    "toggle_theme": "Changer le thème",
+    "logout": "Déconnexion"
+  },
+  "dashboard": {
+    "greeting": "Bonjour",
+    "guest": "Ami",
+    "subtitle": "Voici le résumé de votre parcours de bien-être mental.",
+    "stat_streak": "Série d'habitudes",
+    "stat_days": "Jours",
+    "stat_sessions": "Sessions IA",
+    "stat_moods": "Journaux d'humeur",
+    "log_title": "Comment vous sentez-vous ?",
+    "save_entry": "Enregistrer l'entrée",
+    "history_title": "Historique récent",
+    "empty_state": "Aucune entrée pour l'instant."
+  }
+}

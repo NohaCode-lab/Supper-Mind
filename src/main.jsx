@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 import ErrorBoundary from "./components/ui/ErrorBoundary";
 import { initMonitoring } from "./services/sentry";
+import "./i18n";
 import "./index.css";
 
 initMonitoring();

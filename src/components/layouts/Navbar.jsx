@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FiMenu, FiSun, FiMoon, FiGlobe, FiLogOut, FiUser, FiZap } from "react-icons/fi";
+import { FiMenu, FiSun, FiMoon, FiLogOut, FiUser, FiZap } from "react-icons/fi";
 import { useAppStore } from "../../stores/useAppStore";
 import { useAuth } from "../../hooks/useAuth";
 import PricingModal from "../../features/subscription/PricingModal";
+import LanguageSwitcher from "../shared/LanguageSwitcher";
 
 export default function Navbar() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { isDarkMode, toggleTheme, toggleMobileMenu } = useAppStore();
   const { currentUser, signOut } = useAuth();
   const [isPricingOpen, setIsPricingOpen] = useState(false);
-
-  const toggleLanguage = () => {
-    const nextLang = i18n.language?.startsWith("en") ? "de" : "en";
-    i18n.changeLanguage(nextLang);
-  };
 
   return (
     <>
@@ -47,18 +43,8 @@ export default function Navbar() {
             <FiZap className="text-amber-500" /> Upgrade Pro
           </button>
 
-          {/* Language Toggle */}
-          <button
-            onClick={toggleLanguage}
-            className="flex items-center gap-1.5 p-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-            aria-label="Switch language"
-            title="Switch language (EN/DE)"
-          >
-            <FiGlobe size={16} />
-            <span className="uppercase tracking-wider">
-              {i18n.language?.substring(0, 2) || "EN"}
-            </span>
-          </button>
+          {/* Interactive Language Selector Dropdown */}
+          <LanguageSwitcher />
 
           {/* Theme Toggle */}
           <button

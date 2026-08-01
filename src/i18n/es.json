@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel de Bienestar",
+    "chat": "Asistente IA",
+    "greeting": "Bienvenido de nuevo",
+    "guest": "Invitado",
+    "toggle_language": "Cambiar idioma",
+    "toggle_theme": "Cambiar tema",
+    "logout": "Cerrar sesión"
+  },
+  "dashboard": {
+    "greeting": "Hola",
+    "guest": "Amigo",
+    "subtitle": "Aquí está el resumen de tu trayectoria de bienestar.",
+    "stat_streak": "Racha de Hábitos",
+    "stat_days": "Días",
+    "stat_sessions": "Sesiones IA",
+    "stat_moods": "Registros de Ánimo",
+    "log_title": "¿Cómo te sientes hoy?",
+    "save_entry": "Guardar Entrada",
+    "history_title": "Historial Reciente",
+    "empty_state": "Aún no hay entradas."
+  }
+}
