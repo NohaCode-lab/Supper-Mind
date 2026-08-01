@@ -8,7 +8,7 @@ export const useAuthStore = create(
       currentUser: null,
       isAuthLoading: false,
 
-      setUser: (user) => set({ currentUser: user }),
+      setUser: (user) => set({ currentUser: user || null }),
 
       signOut: async () => {
         try {
@@ -34,3 +34,5 @@ export const useAuthStore = create(
     }
   )
 );
+
+

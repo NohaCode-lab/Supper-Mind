@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FiCheck, FiHeart, FiSmile, FiTarget, FiWind } from "react-icons/fi";
+import { FiCheck, FiHeart, FiSmile, FiTarget, FiWind, FiX } from "react-icons/fi";
 import { useAppStore } from "../../stores/useAppStore";
 import { useHabitStore } from "../../stores/useHabitStore";
 
@@ -53,26 +53,43 @@ export default function OnboardingModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setOnboardingComplete(true);
+      }}
+      className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-lg w-full shadow-2xl space-y-6"
+        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-lg w-full shadow-2xl space-y-6 relative"
       >
-        {/* Progress Bar */}
+        {/* Progress Bar & Dismiss Button */}
         <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
-          <span>{t("onboarding.step", "Step")} {step} {t("onboarding.of", "of")} 3</span>
-          <div className="flex gap-1.5">
-            {[1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className={`w-6 h-1.5 rounded-full transition-all ${
-                  s <= step ? "bg-teal-600" : "bg-slate-200 dark:bg-slate-800"
-                }`}
-              />
-            ))}
+          <div className="flex items-center gap-2">
+            <span>{t("onboarding.step", "Step")} {step} {t("onboarding.of", "of")} 3</span>
+            <div className="flex gap-1.5 ml-2">
+              {[1, 2, 3].map((s) => (
+                <div
+                  key={s}
+                  className={`w-6 h-1.5 rounded-full transition-all ${
+                    s <= step ? "bg-teal-600" : "bg-slate-200 dark:bg-slate-800"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
+
+          <button
+            onClick={() => setOnboardingComplete(true)}
+            className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg"
+            aria-label={t("common.close", "Close")}
+            title={t("common.close", "Close")}
+          >
+            <FiX size={18} />
+          </button>
         </div>
+
 
         {/* Step 1: Goals */}
         {step === 1 && (
