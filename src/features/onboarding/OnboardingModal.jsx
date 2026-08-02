@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FiCheck, FiHeart, FiSmile, FiTarget, FiWind, FiX } from "react-icons/fi";
 import { useAppStore } from "../../stores/useAppStore";
@@ -29,11 +29,41 @@ export default function OnboardingModal() {
   const { t } = useTranslation();
   const { hasCompletedOnboarding, setOnboardingComplete, setPrimaryGoal, setAiTone } = useAppStore();
   const { addHabit } = useHabitStore();
+  const modalRef = useRef(null);
 
   const [step, setStep] = useState(1);
   const [selectedGoal, setSelectedGoal] = useState("stress");
   const [selectedHabits, setSelectedHabits] = useState(["2-min Box Breathing"]);
   const [selectedTone, setSelectedTone] = useState("Empathetic & Soothing");
+
+  useEffect(() => {
+    if (hasCompletedOnboarding) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setOnboardingComplete(true);
+      }
+      if (e.key === "Tab" && modalRef.current) {
+        const focusables = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [hasCompletedOnboarding, setOnboardingComplete]);
 
   if (hasCompletedOnboarding) return null;
 
@@ -60,6 +90,7 @@ export default function OnboardingModal() {
       className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
     >
       <motion.div
+        ref={modalRef}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-lg w-full shadow-2xl space-y-6 relative"

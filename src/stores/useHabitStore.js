@@ -25,6 +25,25 @@ const INITIAL_HABITS = [
   },
 ];
 
+/**
+ * @typedef {Object} Habit
+ * @property {string} id - Unique identifier for the habit.
+ * @property {string} name - Name of the daily habit.
+ * @property {number} streak - Consecutive streak days count.
+ * @property {string} last_completed - Date string (YYYY-MM-DD) when last completed.
+ * @property {string} created_at - ISO timestamp of habit creation.
+ */
+
+/**
+ * @typedef {Object} HabitState
+ * @property {Habit[]} habits - Array of habits tracked in state.
+ * @property {(name: string) => void} addHabit - Adds a new daily habit to state.
+ * @property {(id: string) => void} toggleHabit - Toggles habit completion for today.
+ * @property {(id: string) => void} removeHabit - Deletes a habit from state by ID.
+ * @property {() => void} resetHabits - Resets habits to initial default state.
+ */
+
+/** @type {import('zustand').UseBoundStore<import('zustand').StoreApi<HabitState>>} */
 export const useHabitStore = create(
   persist(
     (set, get) => ({

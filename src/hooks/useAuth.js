@@ -1,6 +1,17 @@
 import { useAuthStore } from "../stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Custom authentication hook providing current user state, auth flags, and signOut handler.
+ *
+ * @returns {{
+ *   currentUser: import("../stores/useAuthStore").User | null,
+ *   isAuthLoading: boolean,
+ *   isAuthenticated: boolean,
+ *   isGuest: boolean,
+ *   signOut: () => Promise<void>
+ * }} Authentication status and methods.
+ */
 export function useAuth() {
   const currentUser = useAuthStore((state) => state.currentUser);
   const isAuthLoading = useAuthStore((state) => state.isAuthLoading);

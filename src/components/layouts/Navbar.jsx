@@ -10,7 +10,10 @@ import LanguageSwitcher from "../shared/LanguageSwitcher";
 
 export default function Navbar() {
   const { t } = useTranslation();
-  const { isDarkMode, toggleTheme, toggleMobileMenu, closeMobileMenu } = useAppStore();
+  const isDarkMode = useAppStore((state) => state.isDarkMode);
+  const toggleTheme = useAppStore((state) => state.toggleTheme);
+  const toggleMobileMenu = useAppStore((state) => state.toggleMobileMenu);
+  const closeMobileMenu = useAppStore((state) => state.closeMobileMenu);
   const { currentUser, signOut } = useAuth();
   const [isPricingOpen, setIsPricingOpen] = useState(false);
 

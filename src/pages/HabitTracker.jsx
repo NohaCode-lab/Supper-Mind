@@ -5,7 +5,10 @@ import { useHabitStore } from "../stores/useHabitStore";
 
 export default function HabitTracker() {
   const { t } = useTranslation();
-  const { habits, addHabit, toggleHabit, removeHabit } = useHabitStore();
+  const habits = useHabitStore((state) => state.habits);
+  const addHabit = useHabitStore((state) => state.addHabit);
+  const toggleHabit = useHabitStore((state) => state.toggleHabit);
+  const removeHabit = useHabitStore((state) => state.removeHabit);
   const [newHabit, setNewHabit] = useState("");
 
   const handleAdd = (e) => {

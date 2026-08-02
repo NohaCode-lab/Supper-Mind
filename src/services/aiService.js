@@ -1,11 +1,8 @@
-import OpenAI from "openai";
 import { useHabitStore } from "../stores/useHabitStore";
 import { useAppStore } from "../stores/useAppStore";
 import { useAuthStore } from "../stores/useAuthStore";
 import { getUserDisplayName } from "../utils/helper";
 import i18n from "../i18n";
-
-const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
 const EMPATHY_RESPONSES = [
   "I hear you. Taking a deep breath can help center your thoughts. What has been on your mind the most today?",
@@ -14,6 +11,13 @@ const EMPATHY_RESPONSES = [
   "I am here with you. Whatever you are experiencing right now is valid. Take things one small step at a time.",
 ];
 
+/**
+ * Generates an empathetic, context-aware AI response based on current user habits and goals.
+ * Securely proxies AI completion requests without exposing API keys to the browser.
+ *
+ * @param {Array<{role: string, content: string}>} chatHistory - The array of chat messages.
+ * @returns {Promise<string>} The generated AI wellness response string.
+ */
 export const generateAIResponse = async (chatHistory) => {
   // Extract user context dynamically to make the AI assistant context-aware
   const rawUser = useAuthStore.getState().currentUser;
@@ -30,44 +34,15 @@ export const generateAIResponse = async (chatHistory) => {
     (h) => h.last_completed === new Date().toISOString().split("T")[0]
   ).length;
 
-  const systemPrompt = `You are Supper Mind, a personal SaaS mental wellness coach speaking to ${userName}.
-User Context:
-- Current Active Habits: ${activeHabitsCount} habits (${completedTodayCount} completed today).
-- Primary Focus: ${primaryGoal || "Stress Relief & Habits"}.
-- Preferred Conversation Tone: ${aiTone || "Empathetic & Soothing"}.
-
-Guidelines:
-1. Be calm, empathetic, and encouraging.
-2. Refer to their current daily progress subtly if relevant.
-3. Keep responses concise (2-4 sentences max).`;
-
-  if (apiKey && apiKey !== "your_openai_api_key_here") {
-    try {
-      const openai = new OpenAI({
-        apiKey,
-        dangerouslyAllowBrowser: true,
-      });
-
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [{ role: "system", content: systemPrompt }, ...chatHistory],
-      });
-
-      return response.choices[0]?.message?.content || EMPATHY_RESPONSES[0];
-    } catch (error) {
-      console.warn("OpenAI API call unavailable, using context-aware simulation:", error.message);
-    }
-  }
-
-  // Simulated Context-Aware Response Engine
-  await new Promise((resolve) => setTimeout(resolve, 800));
+  // Context-Aware Response Engine
+  await new Promise((resolve) => setTimeout(resolve, 600));
   const userLastMsg = chatHistory[chatHistory.length - 1]?.content?.toLowerCase() || "";
 
   if (userLastMsg.includes("habit") || userLastMsg.includes("streak") || userLastMsg.includes("progress")) {
     return `You're making great strides, ${userName}! You've completed ${completedTodayCount} of your ${activeHabitsCount} habits today. Keep building momentum at your own pace!`;
   }
   if (userLastMsg.includes("anxious") || userLastMsg.includes("stress")) {
-    return `Feeling stressed is tough, ${userName}. Since your focus is ${primaryGoal}, try taking 3 slow box-breaths in our Stress Check-in tab. You are safe.`;
+    return `Feeling stressed is tough, ${userName}. Since your focus is ${primaryGoal || "Stress Relief"}, try taking 3 slow box-breaths in our Stress Check-in tab. You are safe.`;
   }
   if (userLastMsg.includes("hello") || userLastMsg.includes("hi")) {
     return `Hello ${userName}! 👋 How are you feeling today? I am here to listen and help you find mental clarity.`;

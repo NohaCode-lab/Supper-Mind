@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -17,7 +18,8 @@ import { useAuth } from "../../hooks/useAuth";
 
 export default function Sidebar() {
   const { t } = useTranslation();
-  const { isMobileMenuOpen, closeMobileMenu } = useAppStore();
+  const isMobileMenuOpen = useAppStore((state) => state.isMobileMenuOpen);
+  const closeMobileMenu = useAppStore((state) => state.closeMobileMenu);
   const { currentUser } = useAuth();
 
   const isAuthenticated = Boolean(
@@ -28,16 +30,19 @@ export default function Sidebar() {
     currentUser.email !== "guest@suppermind.com"
   );
 
-  const navItems = [
-    { path: "/", label: t("navigation.home", "Home"), icon: FiHome, end: true },
-    { path: "/dashboard", label: t("navigation.dashboard", "Dashboard"), icon: FiGrid },
-    { path: "/chat", label: t("navigation.chat", "AI Companion"), icon: FiMessageSquare },
-    { path: "/habits", label: t("navigation.habits", "Habits Tracker"), icon: FiCheckSquare },
-    { path: "/journal", label: t("navigation.journal", "Daily Journal"), icon: FiBookOpen },
-    { path: "/mood", label: t("navigation.mood", "Mood Analytics"), icon: FiSmile },
-    { path: "/stress", label: t("navigation.stress", "Stress Check-in"), icon: FiWind },
-    { path: "/settings", label: t("navigation.settings", "Settings"), icon: FiSettings },
-  ];
+  const navItems = useMemo(
+    () => [
+      { path: "/", label: t("navigation.home", "Home"), icon: FiHome, end: true },
+      { path: "/dashboard", label: t("navigation.dashboard", "Dashboard"), icon: FiGrid },
+      { path: "/chat", label: t("navigation.chat", "AI Companion"), icon: FiMessageSquare },
+      { path: "/habits", label: t("navigation.habits", "Habits Tracker"), icon: FiCheckSquare },
+      { path: "/journal", label: t("navigation.journal", "Daily Journal"), icon: FiBookOpen },
+      { path: "/mood", label: t("navigation.mood", "Mood Analytics"), icon: FiSmile },
+      { path: "/stress", label: t("navigation.stress", "Stress Check-in"), icon: FiWind },
+      { path: "/settings", label: t("navigation.settings", "Settings"), icon: FiSettings },
+    ],
+    [t]
+  );
 
   return (
     <>
@@ -93,6 +98,7 @@ export default function Sidebar() {
                   to={item.path}
                   end={item.end}
                   onClick={closeMobileMenu}
+                  aria-current={({ isActive }) => (isActive ? "page" : undefined)}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all ${
                       isActive
