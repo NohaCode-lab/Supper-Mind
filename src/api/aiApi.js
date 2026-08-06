@@ -9,7 +9,7 @@ export const aiApi = {
         method: "POST",
         body: JSON.stringify({ messages, planTier }),
       });
-    } catch (error) {
+    } catch {
       // Fallback to local AI engine if Edge Function is in local offline mode
       const reply = await generateAIResponse(messages);
       return {

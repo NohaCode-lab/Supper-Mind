@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 
 export default function AIChat() {
@@ -19,7 +18,7 @@ export default function AIChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // 📌 Simulated AI response (replace later with real API)
+  // 📌 Simulated AI response
   const generateAIResponse = async (userMessage) => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -49,7 +48,7 @@ export default function AIChat() {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {

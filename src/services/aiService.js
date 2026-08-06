@@ -26,7 +26,7 @@ export const generateAIResponse = async (chatHistory) => {
       ? null
       : rawUser;
   const habits = useHabitStore.getState().habits || [];
-  const { aiTone, primaryGoal } = useAppStore.getState();
+  const { primaryGoal } = useAppStore.getState();
 
   const userName = getUserDisplayName(currentUser);
   const activeHabitsCount = habits.length;

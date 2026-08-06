@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import { apiRequest, ApiError } from "../api/client";
+import { describe, it, expect } from "vitest";
+import { ApiError } from "../api/client";
 import { aiApi } from "../api/aiApi";
 
 describe("Full-Stack API Layer & Error Handling", () => {

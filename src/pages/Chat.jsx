@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FiHeart, FiSend, FiUser } from "react-icons/fi";
-import { useAuth } from "../hooks/useAuth";
 import { generateAIResponse } from "../services/aiService";
 import { useAppStore } from "../stores/useAppStore";
 import { handleAppError } from "../utils/helper";
