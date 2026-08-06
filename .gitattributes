@@ -1,0 +1,6 @@
+# GitHub Linguist Language & Attribute Configuration for Supper-Mind
+docs/* linguist-documentation
+*.jpg linguist-documentation
+*.png linguist-documentation
+dist/* linguist-vendored
+package-lock.json linguist-vendored
