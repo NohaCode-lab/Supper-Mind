@@ -1,17 +1,19 @@
 # 🧠 Supper-Mind AI Wellness & Habit SaaS Platform
 
+[![React](https://img.shields.io/badge/React-18.x-20B2AA.svg?logo=react&logoColor=white)](https://react.dev/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E.svg?logo=javascript&logoColor=black)](https://developer.mozilla.org)
+[![Vite](https://img.shields.io/badge/Vite-5.x-purple.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS%203-06B6D4.svg?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth%20%26%20DB-3ECF8E.svg?logo=supabase&logoColor=white)](https://supabase.com)
+[![OpenAI](https://img.shields.io/badge/OpenAI-API%20Integration-412991.svg?logo=openai&logoColor=white)](https://openai.com)
+[![i18n](https://img.shields.io/badge/i18n-DE%20%7C%20EN%20%7C%20AR%20(RTL)-blueviolet.svg)](https://github.com/NohaCode-lab/Supper-Mind)
+[![Sentry](https://img.shields.io/badge/Sentry-Error%20Tracking-362D59.svg?logo=sentry&logoColor=white)](https://sentry.io)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-Clean%20Code-orange.svg?logo=sonarcloud&logoColor=white)](https://sonarcloud.io)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+
 > An enterprise-grade, multilingual AI wellness, mental health companion, and habit tracking SaaS platform built with React 18, Vite, Supabase, OpenAI, Tailwind CSS, and cloud containerization.
 
-[![React 18](https://img.shields.io/badge/React-18.3-61DAFB.svg?logo=react&logoColor=white)](https://reactjs.org/)
-[![Vite 5](https://img.shields.io/badge/Vite-5.4-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Database%2FAuth-3ECF8E.svg?logo=supabase&logoColor=white)](https://supabase.com/)
-[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-412991.svg?logo=openai&logoColor=white)](https://openai.com/)
-[![Zustand](https://img.shields.io/badge/Zustand-5.0-purple.svg?logo=react&logoColor=white)](https://github.com/pmndrs/zustand)
-[![TanStack Query](https://img.shields.io/badge/TanStack_Query-5.62-FF4154.svg?logo=react-query&logoColor=white)](https://tanstack.com/query)
-[![Vitest](https://img.shields.io/badge/Vitest-2.1-yellow.svg?logo=vitest&logoColor=white)](https://vitest.dev/)
-[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF.svg?logo=githubactions&logoColor=white)](https://github.com/features/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 🌐 **Live Application:** [https://supper-mind.vercel.app](https://supper-mind.vercel.app) *(Production Deployment)*  
 📚 **GitHub Repository:** [https://github.com/NohaCode-lab/Supper-Mind](https://github.com/NohaCode-lab/Supper-Mind)  
