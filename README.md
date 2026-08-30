@@ -14,9 +14,14 @@
 
 > An enterprise-grade, multilingual AI wellness, mental health companion, and habit tracking SaaS platform built with React 18, Vite, Supabase, OpenAI, Tailwind CSS, and cloud containerization.
 
+---
 
-🌐 **Live Application:** [https://supper-mind.vercel.app](https://supper-mind.vercel.app) *(Production Deployment)*  
-📚 **GitHub Repository:** [https://github.com/NohaCode-lab/Supper-Mind](https://github.com/NohaCode-lab/Supper-Mind)  
+## 🔗 Project Links
+
+* **Live Demo (Frontend):** `https://supper-mind.vercel.app` *(Placeholder — to be updated upon live Vercel deploy)*
+* **Backend BaaS (Database/Auth):** [Supabase Cloud](https://supabase.com) *(Managed Cloud)*
+* **GitHub Repository:** `https://github.com/NohaCode-lab/Supper-Mind`
+* **Deployment Architecture:** [Production Deployment Architecture](#-production-deployment)
 
 ---
 
@@ -195,6 +200,49 @@ Container & Filesystem Security Audit (Trivy Scan)
 | **Security & Hardening** | `100/100` | 🟢 Certified (Zero client secrets, store sanitizer, Trivy scan) |
 | **CI/CD Reliability** | `100/100` | 🟢 Certified (Node 22 pipeline, automated quality gates) |
 | **OVERALL SYSTEM** | **`99/100`** | 🟢 **PRODUCTION READY** |
+
+---
+
+# 🚀 Production Deployment
+
+## Architecture Overview
+
+```text
+                             SUPPER-MIND PRODUCTION TOPOLOGY
+                                            │
+    ┌───────────────────────────────────────┴───────────────────────────────────────┐
+    ▼                                                                               ▼
+[ Vercel Edge Global CDN ]                                          [ Supabase Cloud Managed Platform ]
+React 18 + Vite 5 Frontend (https://supper-mind.vercel.app)          PostgreSQL, Auth & Edge Functions
+ ├── Vite SPA Bundle (dist/)                                         ├── User Profiles & Authentication
+ ├── vercel.json Static Build & SPA Rewrites                         ├── Mood Check-ins & Habit Streaks
+ ├── Recharts Wellness Analytics Visualizer                          ├── Journal Entries & Reflection Logs
+ └── Tri-Lingual i18n Engine (EN / DE / AR RTL)                      └── OpenAI Edge Function Proxy
+```
+
+## Live Application
+
+* **Frontend:** `https://supper-mind.vercel.app` *(Placeholder — to be updated upon live Vercel deploy)*
+* **Backend BaaS / Database:** [Supabase Managed Platform](https://supabase.com) *(Cloud-managed, credentials isolated)*
+
+---
+
+## 🛠️ Step-by-Step Deployment Instructions
+
+### 1. Backend & Database — Supabase
+1. Create a free project on [Supabase](https://supabase.com).
+2. Copy the **Project URL** and **anon public key** from **Project Settings → API**.
+3. Enable Email/Password Auth and Row Level Security (RLS).
+
+### 2. Frontend SPA — Vercel
+1. In [Vercel](https://vercel.com), click **Add New Project** and import `Supper-Mind`.
+2. Framework is automatically detected as **Vite** (`dist`).
+3. Set Environment Variables in Vercel:
+   ```text
+   VITE_SUPABASE_URL      = https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY = your-supabase-anon-key
+   ```
+4. Click **Deploy**. The pre-configured [`vercel.json`](vercel.json) handles static build routing and client-side rewrites.
 
 ---
 
