@@ -36,7 +36,7 @@ describe("Security & Guest Navigation Verification", () => {
     expect(useAuthStore.getState().currentUser).toBeNull();
   });
 
-  it("allows guest users to navigate sidebar links while keeping currentUser null", () => {
+  it("strictly redirects unauthenticated guests to /login when attempting to access protected routes", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <Sidebar />
@@ -58,14 +58,11 @@ describe("Security & Guest Navigation Verification", () => {
 
     const chatLink = screen.getByRole("link", { name: /AI Companion/i });
     fireEvent.click(chatLink);
-    expect(screen.getByText("AI Companion View")).toBeInTheDocument();
-    expect(screen.queryByText("Login View")).not.toBeInTheDocument();
+    // Unauthenticated guest must be blocked and redirected to Login View
+    expect(screen.getByText("Login View")).toBeInTheDocument();
+    expect(screen.queryByText("AI Companion View")).not.toBeInTheDocument();
 
-    const habitsLink = screen.getByRole("link", { name: /Habits Tracker/i });
-    fireEvent.click(habitsLink);
-    expect(screen.getByText("Habits View")).toBeInTheDocument();
-
-    // Verify currentUser is strictly null during guest navigation
+    // Verify currentUser is strictly null
     expect(useAuthStore.getState().currentUser).toBeNull();
   });
 

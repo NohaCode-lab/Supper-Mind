@@ -22,19 +22,25 @@ export const habitApi = {
     return data;
   },
 
-  async updateStreak(habitId, streak, lastCompleted) {
-    const { data, error } = await supabase
+  async updateStreak(habitId, streak, lastCompleted, userId = null) {
+    let query = supabase
       .from("habits")
       .update({ streak, last_completed: lastCompleted })
-      .eq("id", habitId)
-      .select()
-      .single();
+      .eq("id", habitId);
+    if (userId) {
+      query = query.eq("user_id", userId);
+    }
+    const { data, error } = await query.select().single();
     if (error) throw error;
     return data;
   },
 
-  async deleteHabit(habitId) {
-    const { error } = await supabase.from("habits").delete().eq("id", habitId);
+  async deleteHabit(habitId, userId = null) {
+    let query = supabase.from("habits").delete().eq("id", habitId);
+    if (userId) {
+      query = query.eq("user_id", userId);
+    }
+    const { error } = await query;
     if (error) throw error;
   },
 };

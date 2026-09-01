@@ -1,8 +1,8 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export default function ProtectedRoute() {
-  const { isAuthLoading } = useAuth();
+  const { isAuthenticated, isAuthLoading } = useAuth();
 
   if (isAuthLoading) {
     return (
@@ -12,8 +12,6 @@ export default function ProtectedRoute() {
     );
   }
 
-  // Permits guest visitors to experience full demo navigation using local Zustand store.
-  // Database API & Supabase persistence calls remain strictly protected by isAuthenticated checks.
-  return <Outlet />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
