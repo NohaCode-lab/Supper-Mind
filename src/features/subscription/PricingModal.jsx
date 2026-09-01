@@ -43,9 +43,14 @@ export default function PricingModal({ isOpen, onClose }) {
   const handleUpgrade = async () => {
     try {
       const { url } = await subscriptionApi.createCheckoutSession("price_pro_monthly");
-      if (url) window.location.href = url;
+      if (url && (url.startsWith("https://checkout.stripe.com/") || url.startsWith("https://buy.stripe.com/"))) {
+        window.location.href = url;
+      } else {
+        alert(t("pricing.demoAlert", "Demo Mode: Stripe Checkout simulated successfully!"));
+        onClose();
+      }
     } catch {
-      alert("Demo Mode: Stripe Checkout redirected successfully!");
+      alert(t("pricing.demoAlert", "Demo Mode: Stripe Checkout simulated successfully!"));
       onClose();
     }
   };

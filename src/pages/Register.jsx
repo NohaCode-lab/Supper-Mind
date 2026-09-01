@@ -46,22 +46,16 @@ export default function Register() {
       const data = await authApi.signUp(email, password, fullName);
       if (data?.user) {
         setUser(data.user);
+        navigate("/dashboard");
       } else {
-        setUser({
-          id: `user-${Date.now()}`,
-          email,
-          user_metadata: { full_name: fullName },
-        });
+        throw new Error(t("auth.signUpFailed", "Registration failed. Please verify your details and try again."));
       }
-    } catch {
-      setUser({
-        id: `user-${Date.now()}`,
-        email,
-        user_metadata: { full_name: fullName },
+    } catch (error) {
+      setErrors({
+        form: error.message || t("auth.signUpFailed", "Registration failed. Please try again."),
       });
     } finally {
       setIsLoading(false);
-      navigate("/dashboard");
     }
   };
 
@@ -81,6 +75,12 @@ export default function Register() {
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
+          {errors.form && (
+            <div className="p-3 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-600 dark:text-rose-400 text-xs font-medium">
+              {errors.form}
+            </div>
+          )}
+
           <Input
             label={t("auth.fullName", "Full Name")}
             value={fullName}

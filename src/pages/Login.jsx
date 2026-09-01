@@ -37,26 +37,16 @@ export default function Login() {
       const data = await authApi.login(email, password);
       if (data?.user) {
         setUser(data.user);
+        navigate("/dashboard");
       } else {
-        const nameFromEmail = email.split("@")[0] || "User";
-        const formattedName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
-        setUser({
-          id: `user-${Date.now()}`,
-          email,
-          user_metadata: { full_name: formattedName },
-        });
+        throw new Error(t("auth.invalidCredentials", "Invalid email or password. Please try again."));
       }
-    } catch {
-      const nameFromEmail = email.split("@")[0] || "User";
-      const formattedName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
-      setUser({
-        id: `user-${Date.now()}`,
-        email,
-        user_metadata: { full_name: formattedName },
+    } catch (error) {
+      setErrors({
+        form: error.message || t("auth.invalidCredentials", "Invalid email or password. Please try again."),
       });
     } finally {
       setIsLoading(false);
-      navigate("/dashboard");
     }
   };
 
@@ -76,6 +66,12 @@ export default function Login() {
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
+          {errors.form && (
+            <div className="p-3 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-600 dark:text-rose-400 text-xs font-medium">
+              {errors.form}
+            </div>
+          )}
+
           <Input
             label={t("auth.email", "Email Address")}
             type="email"
