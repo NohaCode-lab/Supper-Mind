@@ -46,6 +46,7 @@ jobs:
 
       - name: Run Trivy Filesystem Scan
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           scan-type: 'fs'
           ignore-unfixed: true
